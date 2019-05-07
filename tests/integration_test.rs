@@ -1,7 +1,19 @@
 use kru_gfx_conv;
 
-#[test]
 // fn correct_number_of_bitplanes() {
+#[test]
+fn short_file() {
+    let test_path = test_util::get_tests_path().join("short_file.iff");
+    assert!(kru_gfx_conv::read_iff_file(test_path).is_err());
+}
+
+#[test]
+fn not_form_type() {
+    let test_path = test_util::get_tests_path().join("not_form.iff");
+    assert!(kru_gfx_conv::read_iff_file(test_path).is_err());
+}
+
+#[test]
 fn correct_width() {
     let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
 
