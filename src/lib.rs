@@ -8,6 +8,8 @@ pub enum ErrorKind {
     IoError(io::Error),
     FileTooShort,
     UnknownChunk,
+    ZeroSizeChunk,
+    UnsupportedFormType,
     UnknownFormType,
 }
 
@@ -52,15 +54,26 @@ fn parse_iff_chunk(buffer: &Vec<u8>, iff_file: &mut IffFile) -> Result<(), Error
         let chunk_id = get_chunk_id(buffer, pos + 0)?;
         let chunk_size = get_chunk_size(buffer, pos + 4)?;
 
+        if chunk_size == 0 {
+            return Err(ErrorKind::ZeroSizeChunk);
+        }
+
         match chunk_id {
             "FORM" => {
                 let form_type = get_chunk_id(buffer, pos + 8)?;
                 println!("FORM type {}", form_type);
                 match form_type {
                     "ILBM" => println!("ILBM"),
-                    // "ANIM" => println!("anim"),
+                    "ANIM" => {
+                        println!("ANIM");
+                        return Err(ErrorKind::UnsupportedFormType);
+                    }
                     _ => return Err(ErrorKind::UnknownFormType),
                 }
+
+                let form_buffer = &buffer[pos + 12..pos + 12 + chunk_size - 4];
+
+                println!("form_buffer len: {}", form_buffer.len());
 
                 // parse_iff_chunk()
             }
