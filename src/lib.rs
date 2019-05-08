@@ -15,6 +15,8 @@ pub struct IffFile {
 }
 
 pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<IffFile, ErrorKind> {
+    println!("file_path {:?}", file_path);
+
     let mut f = match File::open(file_path) {
         Ok(file) => file,
         Err(error) => return Err(ErrorKind::IoError(error)),
@@ -46,18 +48,8 @@ pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<IffFile, ErrorKind> {
 fn parse_iff_chunk(buffer: &Vec<u8>, iff_file: &mut IffFile) -> Result<(), ErrorKind> {
     let mut pos = 0usize;
     while pos < buffer.len() {
-        let chunk_id = std::str::from_utf8(&buffer[pos..pos + 4]);
-        let chunk_id = match chunk_id {
-            Ok(x) => x,
-            Err(_) => return Err(ErrorKind::UnknownChunk),
-        };
-        println!("group_id {:?}", chunk_id);
-
-        let chunk_size_slize = &buffer[pos + 4..pos + 8];
-        let mut chunk_size_array: [u8; 4] = [0; 4];
-        chunk_size_array.copy_from_slice(chunk_size_slize);
-        let chunk_size = unsafe { std::mem::transmute::<[u8; 4], u32>(chunk_size_array).to_be() };
-        println!("chunk_size {:?}", chunk_size);
+        let chunk_id = get_chunk_id(buffer, pos + 0)?;
+        let chunk_size = get_chunk_size(buffer, pos + 4)?;
 
         match chunk_id {
             "FORM" => {
@@ -72,14 +64,32 @@ fn parse_iff_chunk(buffer: &Vec<u8>, iff_file: &mut IffFile) -> Result<(), Error
 
         // TODO: Break on chunk_size 0 (ErrorKind::ZeroSizeChunk)
         pos += 8;
-        pos += chunk_size as usize;
-        // if group_id != "FORM" {
-        //     ;
-        // }
-        // let hej2 = std::str::from_utf8(hej);
+        pos += chunk_size;
     }
 
     (*iff_file).width = 320;
 
     Ok(())
+}
+
+fn get_chunk_id(buffer: &Vec<u8>, pos: usize) -> Result<&str, ErrorKind> {
+    let chunk_id = std::str::from_utf8(&buffer[pos..pos + 4]);
+    let chunk_id = match chunk_id {
+        Ok(x) => x,
+        Err(_) => return Err(ErrorKind::UnknownChunk),
+    };
+    println!("group_id {:?}", chunk_id);
+
+    Ok(chunk_id)
+}
+
+fn get_chunk_size(buffer: &Vec<u8>, pos: usize) -> Result<usize, ErrorKind> {
+    let chunk_size_slize = &buffer[pos..pos + 4];
+    let mut chunk_size_array: [u8; 4] = [0; 4];
+    chunk_size_array.copy_from_slice(chunk_size_slize);
+    let chunk_size = unsafe { std::mem::transmute::<[u8; 4], u32>(chunk_size_array).to_be() };
+    let chunk_size = chunk_size as usize;
+    println!("chunk_size {:?}", chunk_size);
+
+    Ok(chunk_size)
 }
