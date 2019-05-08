@@ -8,8 +8,10 @@ pub enum ErrorKind {
     IoError(io::Error),
     FileTooShort,
     UnknownChunk,
+    UnknownFormType,
 }
 
+#[derive(Debug)]
 pub struct IffFile {
     pub width: u32,
 }
@@ -27,7 +29,9 @@ pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<IffFile, ErrorKind
         Err(error) => return Err(ErrorKind::IoError(error)),
     };
 
-    parse_iff_buffer(&buffer) // {
+    let ending = parse_iff_buffer(&buffer);
+    println!("ending: {:?}", ending);
+    ending
 }
 
 pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<IffFile, ErrorKind> {
@@ -53,12 +57,17 @@ fn parse_iff_chunk(buffer: &Vec<u8>, iff_file: &mut IffFile) -> Result<(), Error
 
         match chunk_id {
             "FORM" => {
-                println!("FORM");
+                let form_type = get_chunk_id(buffer, pos + 8)?;
+                println!("FORM type {}", form_type);
+                match form_type {
+                    "ILBM" => println!("ILBM"),
+                    // "ANIM" => println!("anim"),
+                    _ => return Err(ErrorKind::UnknownFormType),
+                }
 
                 // parse_iff_chunk()
             }
-            "ILBM" => println!("ILBM"),
-            "ANIM" => println!("anim"),
+
             _ => return Err(ErrorKind::UnknownChunk),
         }
 

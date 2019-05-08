@@ -14,6 +14,12 @@ fn not_form_type() {
 }
 
 #[test]
+fn unknown_form_type() {
+    let test_path = test_util::get_tests_path().join("unknown_form_type.iff");
+    assert!(kru_gfx_conv::read_iff_file(test_path).is_err());
+}
+
+#[test]
 fn zero_size_chunk() {
     let test_path = test_util::get_tests_path().join("zero_size_chunk.iff");
     assert!(kru_gfx_conv::read_iff_file(test_path).is_err());
