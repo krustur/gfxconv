@@ -7,7 +7,7 @@ use std::io::prelude::*;
 pub enum ErrorKind {
     IoError(io::Error),
     FileTooShort,
-    NotFORMGroupChunk,
+    UnknownChunk,
 }
 
 pub struct IffFile {
@@ -33,18 +33,53 @@ pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<IffFile, ErrorKind> {
         return Err(ErrorKind::FileTooShort);
     }
 
-    let group_id = std::str::from_utf8(&buffer[0..4]);
-    let group_id = match group_id {
-        Ok(x) => x,
-        Err(_) => return Err(ErrorKind::NotFORMGroupChunk),
-    };
-    if group_id != "FORM" {
-        return Err(ErrorKind::NotFORMGroupChunk);
+    let mut iff_file = IffFile { width: 0 };
+
+    match parse_iff_chunk(buffer, &mut iff_file) {
+        Ok(()) => (),
+        Err(err) => return Err(err),
     }
-    // let hej2 = std::str::from_utf8(hej);
-    println!("group_id {:?}", group_id);
 
-    let gfx = IffFile { width: 320 };
+    Ok(iff_file)
+}
 
-    Ok(gfx)
+fn parse_iff_chunk(buffer: &Vec<u8>, iff_file: &mut IffFile) -> Result<(), ErrorKind> {
+    let mut pos = 0usize;
+    while pos < buffer.len() {
+        let chunk_id = std::str::from_utf8(&buffer[pos..pos + 4]);
+        let chunk_id = match chunk_id {
+            Ok(x) => x,
+            Err(_) => return Err(ErrorKind::UnknownChunk),
+        };
+        println!("group_id {:?}", chunk_id);
+
+        let chunk_size_slize = &buffer[pos + 4..pos + 8];
+        let mut chunk_size_array: [u8; 4] = [0; 4];
+        chunk_size_array.copy_from_slice(chunk_size_slize);
+        let chunk_size = unsafe { std::mem::transmute::<[u8; 4], u32>(chunk_size_array).to_be() };
+        println!("chunk_size {:?}", chunk_size);
+
+        match chunk_id {
+            "FORM" => {
+                println!("FORM");
+
+                // parse_iff_chunk()
+            }
+            "ILBM" => println!("ILBM"),
+            "ANIM" => println!("anim"),
+            _ => return Err(ErrorKind::UnknownChunk),
+        }
+
+        // TODO: Break on chunk_size 0 (ErrorKind::ZeroSizeChunk)
+        pos += 8;
+        pos += chunk_size as usize;
+        // if group_id != "FORM" {
+        //     ;
+        // }
+        // let hej2 = std::str::from_utf8(hej);
+    }
+
+    (*iff_file).width = 320;
+
+    Ok(())
 }
