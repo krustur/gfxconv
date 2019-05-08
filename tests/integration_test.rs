@@ -33,7 +33,10 @@ fn correct_root_chunk_id() {
     //     "D:\\github\\kru_gfx_conv\\tests\\test01_320_256_256.iff",
     //     test_path.to_str().unwrap()
     // );
-    assert_eq!("FORM", kru_gfx_conv::read_iff_file(test_path).unwrap().id);
+    assert_eq!(
+        "FORM",
+        kru_gfx_conv::read_iff_file(test_path).unwrap().get_id()
+    );
 }
 
 mod test_util {
