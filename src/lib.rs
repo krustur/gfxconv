@@ -14,11 +14,21 @@ pub enum ErrorKind {
 }
 
 #[derive(Debug)]
-pub struct IffFile {
+pub struct IffChunk {
+    children: Vec<IffChunk>,
     pub width: u32,
 }
 
-pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<IffFile, ErrorKind> {
+impl IffChunk {
+    pub fn new() -> IffChunk {
+        IffChunk {
+            children: Vec::new(),
+            width: 0,
+        }
+    }
+}
+
+pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<IffChunk, ErrorKind> {
     println!("file_path {:?}", file_path);
 
     let mut f = match File::open(file_path) {
@@ -36,19 +46,19 @@ pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<IffFile, ErrorKind
     ending
 }
 
-pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<IffFile, ErrorKind> {
+pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<IffChunk, ErrorKind> {
     if buffer.len() < 12 {
         return Err(ErrorKind::FileTooShort);
     }
 
-    let mut iff_file = IffFile { width: 0 };
+    let mut iff_file = IffChunk::new();
 
     parse_iff_chunk(buffer, &mut iff_file)?;
 
     Ok(iff_file)
 }
 
-fn parse_iff_chunk(buffer: &Vec<u8>, iff_file: &mut IffFile) -> Result<(), ErrorKind> {
+fn parse_iff_chunk(buffer: &[u8], iff_file: &mut IffChunk) -> Result<(), ErrorKind> {
     let mut pos = 0usize;
     while pos < buffer.len() {
         let chunk_id = get_chunk_id(buffer, pos + 0)?;
@@ -72,16 +82,23 @@ fn parse_iff_chunk(buffer: &Vec<u8>, iff_file: &mut IffFile) -> Result<(), Error
                 }
 
                 let form_buffer = &buffer[pos + 12..pos + 12 + chunk_size - 4];
-
                 println!("form_buffer len: {}", form_buffer.len());
+                let mut form_pos = 0usize;
+                // while form_pos < buffer.len() {
+                let form_chunk_id = get_chunk_id(form_buffer, form_pos + 0)?;
+                let form_chunk_size = get_chunk_size(form_buffer, form_pos + 4)?;
+                println!("form_chunk_id: {}", form_chunk_id);
+                println!("form_chunk_size: {}", form_chunk_size);
 
+                form_pos += 8;
+                form_pos += chunk_size;
+                // }
                 // parse_iff_chunk()
             }
 
             _ => return Err(ErrorKind::UnknownChunk),
         }
 
-        // TODO: Break on chunk_size 0 (ErrorKind::ZeroSizeChunk)
         pos += 8;
         pos += chunk_size;
     }
@@ -91,7 +108,7 @@ fn parse_iff_chunk(buffer: &Vec<u8>, iff_file: &mut IffFile) -> Result<(), Error
     Ok(())
 }
 
-fn get_chunk_id(buffer: &Vec<u8>, pos: usize) -> Result<&str, ErrorKind> {
+fn get_chunk_id(buffer: &[u8], pos: usize) -> Result<&str, ErrorKind> {
     let chunk_id = std::str::from_utf8(&buffer[pos..pos + 4]);
     let chunk_id = match chunk_id {
         Ok(x) => x,
@@ -102,7 +119,7 @@ fn get_chunk_id(buffer: &Vec<u8>, pos: usize) -> Result<&str, ErrorKind> {
     Ok(chunk_id)
 }
 
-fn get_chunk_size(buffer: &Vec<u8>, pos: usize) -> Result<usize, ErrorKind> {
+fn get_chunk_size(buffer: &[u8], pos: usize) -> Result<usize, ErrorKind> {
     let chunk_size_slize = &buffer[pos..pos + 4];
     let mut chunk_size_array: [u8; 4] = [0; 4];
     chunk_size_array.copy_from_slice(chunk_size_slize);
