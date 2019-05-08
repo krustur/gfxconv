@@ -41,10 +41,7 @@ pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<IffFile, ErrorKind> {
 
     let mut iff_file = IffFile { width: 0 };
 
-    match parse_iff_chunk(buffer, &mut iff_file) {
-        Ok(()) => (),
-        Err(err) => return Err(err),
-    }
+    parse_iff_chunk(buffer, &mut iff_file)?;
 
     Ok(iff_file)
 }
