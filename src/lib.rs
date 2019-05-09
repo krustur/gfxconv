@@ -7,7 +7,7 @@ use std::io::prelude::*;
 pub enum ErrorKind {
     IoError(io::Error),
     FileTooShort,
-    UnknownChunk,
+    UnknownChunk(String),
     ZeroSizeChunk,
     FoundMultipleChunksInBuffer,
     UnsupportedFormType,
@@ -151,14 +151,122 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<Chunk>>, ErrorKind> {
                 // parse_iff_chunk()
                 iff_chunks.push(Box::new(iff_form_chunk));
             }
+
+            "ANNO" => {
+                let chunk = UnknownChunk::new(chunk_id.to_string());
+                iff_chunks.push(Box::new(chunk));
+                // ilbm.Anno = Encoding.UTF8.GetString(chunk.Content, 0, (int)chunk.ContentLength);
+                //
+            }
+
             "BMHD" => {
                 let chunk = UnknownChunk::new(chunk_id.to_string());
+                iff_chunks.push(Box::new(chunk));
+                // ilbm.Bmhd = new Bmhd(chunk);
+                //
             }
-            _ => return Err(ErrorKind::UnknownChunk),
+
+            "CMAP" => {
+                let chunk = UnknownChunk::new(chunk_id.to_string());
+                iff_chunks.push(Box::new(chunk));
+                // ilbm.Cmap = new Cmap(chunk, ilbm);
+                //
+            }
+            //
+            "CAMG" => {
+                let chunk = UnknownChunk::new(chunk_id.to_string());
+                iff_chunks.push(Box::new(chunk));
+                // ilbm.Camg = new Camg(chunk);
+                //
+            }
+
+            "BODY" => {
+                let chunk = UnknownChunk::new(chunk_id.to_string());
+                iff_chunks.push(Box::new(chunk));
+                // ilbm.Body = new Body(chunk, ilbm);
+                //
+            }
+
+            "ANHD" => {
+                let chunk = UnknownChunk::new(chunk_id.to_string());
+                iff_chunks.push(Box::new(chunk));
+                // ilbm.Anhd = new Anhd(chunk);
+                //
+            }
+
+            "DLTA" => {
+                let chunk = UnknownChunk::new(chunk_id.to_string());
+                iff_chunks.push(Box::new(chunk));
+                //                 ilbm.Dlta = new Dlta(chunk, ilbm, iffFile);
+                //
+            }
+
+            "DPPS" => {
+                let chunk = UnknownChunk::new(chunk_id.to_string());
+                iff_chunks.push(Box::new(chunk));
+                // //todo: Handle DPPS
+                // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+                //
+            }
+            "DRNG" => {
+                let chunk = UnknownChunk::new(chunk_id.to_string());
+                iff_chunks.push(Box::new(chunk));
+            }
+            //DPaint IV enhanced color cycle chunk (EA)
+            // http://wiki.amigaos.net/wiki/ILBM_IFF_Interleaved_Bitmap
+            // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+            "BRNG" => {
+                let chunk = UnknownChunk::new(chunk_id.to_string());
+                iff_chunks.push(Box::new(chunk));
+                //unknown
+                // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+            }
+
+            "CRNG" => {
+                let chunk = UnknownChunk::new(chunk_id.to_string());
+                iff_chunks.push(Box::new(chunk));
+                // color register range
+                // http://wiki.amigaos.net/wiki/ILBM_IFF_Interleaved_Bitmap
+                // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+            }
+
+            "DPI " => {
+                let chunk = UnknownChunk::new(chunk_id.to_string());
+                iff_chunks.push(Box::new(chunk));
+                // Dots per inch chunk
+                // http://wiki.amigaos.net/wiki/ILBM_IFF_Interleaved_Bitmap
+                // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+            }
+
+            "GRAB" => {
+                let chunk = UnknownChunk::new(chunk_id.to_string());
+                iff_chunks.push(Box::new(chunk));
+                // locates a “handle” or “hotspot”
+                // http://wiki.amigaos.net/wiki/ILBM_IFF_Interleaved_Bitmap
+                // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+            }
+
+            "DPXT" => {
+                let chunk = UnknownChunk::new(chunk_id.to_string());
+                iff_chunks.push(Box::new(chunk));
+                // unknown
+                // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+            }
+
+            "TINY" => {
+                let chunk = UnknownChunk::new(chunk_id.to_string());
+                iff_chunks.push(Box::new(chunk));
+                // Thumbnail
+                // https://en.m.wikipedia.org/wiki/ILBM
+                // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+            }
+
+            _ => return Err(ErrorKind::UnknownChunk(chunk_id.to_string())),
         }
 
         pos += 8;
-        pos += chunk_size;
+        pos += (chunk_size + 1) & 0xfffffffffffffffe;
+
         // if pos < buffer.len() {
         //     return Err(ErrorKind::FoundMultipleChunksInBuffer);
     }
@@ -168,13 +276,23 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<Chunk>>, ErrorKind> {
 
 fn get_chunk_id(buffer: &[u8], pos: usize) -> Result<&str, ErrorKind> {
     let chunk_id = std::str::from_utf8(&buffer[pos..pos + 4]);
-    let chunk_id = match chunk_id {
+    let chunk_id2 = match chunk_id {
         Ok(x) => x,
-        Err(_) => return Err(ErrorKind::UnknownChunk),
+        Err(err) => {
+            let err_msg = std::fmt::format(format_args!(
+                "{}: [{:X}] [{:X}] [{:X}] [{:X}]",
+                err,
+                buffer[pos + 0],
+                buffer[pos + 1],
+                buffer[pos + 2],
+                buffer[pos + 3],
+            ));
+            return Err(ErrorKind::UnknownChunk(err_msg));
+        }
     };
     println!("group_id {:?}", chunk_id);
 
-    Ok(chunk_id)
+    Ok(chunk_id2)
 }
 
 fn get_chunk_size(buffer: &[u8], pos: usize) -> Result<usize, ErrorKind> {
