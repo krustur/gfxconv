@@ -35,7 +35,11 @@ fn correct_root_chunk_id() {
     // );
     assert_eq!(
         "FORM",
-        kru_gfx_conv::read_iff_file(test_path).unwrap().get_id()
+        kru_gfx_conv::read_iff_file(test_path)
+            .unwrap()
+            .pop()
+            .unwrap()
+            .get_id()
     );
 }
 

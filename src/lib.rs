@@ -37,13 +37,11 @@ impl IffFormChunk {
 impl IffChunk for IffFormChunk {
     fn get_id(&self) -> &str {
         &self.id
-        // println!("Greetings. I am {}", self.age)
     }
 
-    fn get_children(&self) -> &Vec<Box<IffChunk>>{
+    fn get_children(&self) -> &Vec<Box<IffChunk>> {
         &self.children
     }
-
 }
 
 impl std::fmt::Debug for IffFormChunk {
@@ -52,7 +50,7 @@ impl std::fmt::Debug for IffFormChunk {
     }
 }
 
-pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<Box<IffChunk>, ErrorKind> {
+pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<Vec<Box<IffChunk>>, ErrorKind> {
     println!("file_path {:?}", file_path);
 
     let mut f = match File::open(file_path) {
@@ -70,70 +68,73 @@ pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<Box<IffChunk>, Err
     ending
 }
 
-pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Box<IffChunk>, ErrorKind> {
+pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Vec<Box<IffChunk>>, ErrorKind> {
     if buffer.len() < 12 {
         return Err(ErrorKind::FileTooShort);
     }
 
-    let iff_file = parse_iff_chunk(buffer)?;
+    let iff_chunks = parse_chunk_buffer(buffer)?;
 
-    Ok(iff_file)
+    Ok(iff_chunks)
 }
 
-fn parse_iff_chunk(buffer: &[u8]) -> Result<Box<IffChunk>, ErrorKind> {
+fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<IffChunk>>, ErrorKind> {
     let mut pos = 0usize;
-    // while pos < buffer.len() {
-    let chunk_id = get_chunk_id(buffer, pos + 0)?;
-    let chunk_size = get_chunk_size(buffer, pos + 4)?;
+    let mut iff_chunks: Vec<Box<IffChunk>>;
 
-    if chunk_size == 0 {
-        return Err(ErrorKind::ZeroSizeChunk);
-    }
+    iff_chunks = Vec::new();
 
-    let mut iff_file: Box<IffChunk>;
+    while pos < buffer.len() {
+        let chunk_id = get_chunk_id(buffer, pos + 0)?;
+        let chunk_size = get_chunk_size(buffer, pos + 4)?;
 
-    match chunk_id {
-        "FORM" => {
-            let form_type = get_chunk_id(buffer, pos + 8)?;
-            println!("FORM type {}", form_type);
-            match form_type {
-                "ILBM" => println!("ILBM"),
-                "ANIM" => {
-                    println!("ANIM");
-                    return Err(ErrorKind::UnsupportedFormType);
-                }
-                _ => return Err(ErrorKind::UnknownFormType),
-            }
-
-            iff_file = Box::new(IffFormChunk::new(chunk_id.to_string()));
-
-            // iff_file.width = 320;
-
-            let form_buffer = &buffer[pos + 12..pos + 12 + chunk_size - 4];
-            println!("form_buffer len: {}", form_buffer.len());
-            let mut form_pos = 0usize;
-            // while form_pos < buffer.len() {
-            let form_chunk_id = get_chunk_id(form_buffer, form_pos + 0)?;
-            let form_chunk_size = get_chunk_size(form_buffer, form_pos + 4)?;
-            println!("form_chunk_id: {}", form_chunk_id);
-            println!("form_chunk_size: {}", form_chunk_size);
-
-            form_pos += 8;
-            form_pos += chunk_size;
-            // }
-            // parse_iff_chunk()
+        if chunk_size == 0 {
+            return Err(ErrorKind::ZeroSizeChunk);
         }
 
-        _ => return Err(ErrorKind::UnknownChunk),
+        match chunk_id {
+            "FORM" => {
+                let form_type = get_chunk_id(buffer, pos + 8)?;
+                println!("FORM type {}", form_type);
+                match form_type {
+                    "ILBM" => println!("ILBM"),
+                    "ANIM" => {
+                        println!("ANIM");
+                        return Err(ErrorKind::UnsupportedFormType);
+                    }
+                    _ => return Err(ErrorKind::UnknownFormType),
+                }
+
+                let iff_form_chunk = Box::new(IffFormChunk::new(chunk_id.to_string()));
+                iff_chunks.push(iff_form_chunk);
+
+                // iff_file.width = 320;
+
+                let form_buffer = &buffer[pos + 12..pos + 12 + chunk_size - 4];
+                println!("form_buffer len: {}", form_buffer.len());
+                let mut form_pos = 0usize;
+                // while form_pos < buffer.len() {
+                let form_chunk_id = get_chunk_id(form_buffer, form_pos + 0)?;
+                let form_chunk_size = get_chunk_size(form_buffer, form_pos + 4)?;
+                println!("form_chunk_id: {}", form_chunk_id);
+                println!("form_chunk_size: {}", form_chunk_size);
+
+                form_pos += 8;
+                form_pos += chunk_size;
+                // }
+                // parse_iff_chunk()
+            }
+
+            _ => return Err(ErrorKind::UnknownChunk),
+        }
+
+        pos += 8;
+        pos += chunk_size;
+        // if pos < buffer.len() {
+        //     return Err(ErrorKind::FoundMultipleChunksInBuffer);
     }
 
-    pos += 8;
-    pos += chunk_size;
-    if pos < buffer.len() {
-        return Err(ErrorKind::FoundMultipleChunksInBuffer);
-    }
-
-    Ok(iff_file)
+    Ok(iff_chunks)
 }
 
 fn get_chunk_id(buffer: &[u8], pos: usize) -> Result<&str, ErrorKind> {
