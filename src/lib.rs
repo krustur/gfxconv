@@ -14,43 +14,43 @@ pub enum ErrorKind {
     UnknownFormType,
 }
 
-pub trait IffChunk {
+pub trait Chunk {
     fn get_id(&self) -> &str;
-    fn get_children(&self) -> &Vec<Box<IffChunk>>;
+    fn get_children(&self) -> &Vec<Box<Chunk>>;
 }
 
 // #[derive(Debug)]
-pub struct IffFormChunk {
+pub struct FormIlbmChunk {
     pub id: String,
-    children: Vec<Box<IffChunk>>,
+    children: Vec<Box<Chunk>>,
 }
 
-impl IffFormChunk {
-    pub fn new(id: String) -> IffFormChunk {
-        IffFormChunk {
+impl FormIlbmChunk {
+    pub fn new(id: String) -> FormIlbmChunk {
+        FormIlbmChunk {
             children: Vec::new(),
             id: id,
         }
     }
 }
 
-impl IffChunk for IffFormChunk {
+impl Chunk for FormIlbmChunk {
     fn get_id(&self) -> &str {
         &self.id
     }
 
-    fn get_children(&self) -> &Vec<Box<IffChunk>> {
+    fn get_children(&self) -> &Vec<Box<Chunk>> {
         &self.children
     }
 }
 
-impl std::fmt::Debug for IffFormChunk {
+impl std::fmt::Debug for FormIlbmChunk {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.id)
     }
 }
 
-pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<Vec<Box<IffChunk>>, ErrorKind> {
+pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<Vec<Box<Chunk>>, ErrorKind> {
     println!("file_path {:?}", file_path);
 
     let mut f = match File::open(file_path) {
@@ -68,7 +68,7 @@ pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<Vec<Box<IffChunk>>
     ending
 }
 
-pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Vec<Box<IffChunk>>, ErrorKind> {
+pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Vec<Box<Chunk>>, ErrorKind> {
     if buffer.len() < 12 {
         return Err(ErrorKind::FileTooShort);
     }
@@ -78,9 +78,9 @@ pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Vec<Box<IffChunk>>, ErrorKin
     Ok(iff_chunks)
 }
 
-fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<IffChunk>>, ErrorKind> {
+fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<Chunk>>, ErrorKind> {
     let mut pos = 0usize;
-    let mut iff_chunks: Vec<Box<IffChunk>>;
+    let mut iff_chunks: Vec<Box<Chunk>>;
 
     iff_chunks = Vec::new();
 
@@ -105,7 +105,7 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<IffChunk>>, ErrorKind> {
                     _ => return Err(ErrorKind::UnknownFormType),
                 }
 
-                let iff_form_chunk = Box::new(IffFormChunk::new(chunk_id.to_string()));
+                let iff_form_chunk = Box::new(FormIlbmChunk::new(chunk_id.to_string()));
                 iff_chunks.push(iff_form_chunk);
 
                 // iff_file.width = 320;
