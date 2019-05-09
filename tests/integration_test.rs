@@ -29,10 +29,10 @@ fn zero_size_chunk() {
 fn correct_root_chunk_id() {
     let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
 
-    // assert_eq!(
-    //     "D:\\github\\kru_gfx_conv\\tests\\test01_320_256_256.iff",
-    //     test_path.to_str().unwrap()
-    // );
+    assert_eq!(
+        "D:\\github\\kru_gfx_conv\\tests\\test01_320_256_256.iff",
+        test_path.to_str().unwrap()
+    );
     assert_eq!(
         "FORM",
         kru_gfx_conv::read_iff_file(test_path)

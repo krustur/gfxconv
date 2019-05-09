@@ -16,13 +16,20 @@ pub enum ErrorKind {
 
 pub trait Chunk {
     fn get_id(&self) -> &str;
-    fn get_children(&self) -> &Vec<Box<Chunk>>;
+}
+
+pub trait ParentChunk {
+    fn get_children(&mut self) -> &mut Vec<Box<Chunk>>;
 }
 
 // #[derive(Debug)]
 pub struct FormIlbmChunk {
     pub id: String,
     children: Vec<Box<Chunk>>,
+}
+
+pub struct UnknownChunk {
+    pub id: String,
 }
 
 impl FormIlbmChunk {
@@ -34,13 +41,27 @@ impl FormIlbmChunk {
     }
 }
 
+impl UnknownChunk {
+    pub fn new(id: String) -> UnknownChunk {
+        UnknownChunk { id: id }
+    }
+}
+
 impl Chunk for FormIlbmChunk {
     fn get_id(&self) -> &str {
         &self.id
     }
+}
 
-    fn get_children(&self) -> &Vec<Box<Chunk>> {
-        &self.children
+impl Chunk for UnknownChunk {
+    fn get_id(&self) -> &str {
+        &self.id
+    }
+}
+
+impl ParentChunk for FormIlbmChunk {
+    fn get_children(&mut self) -> &mut Vec<Box<Chunk>> {
+        &mut self.children
     }
 }
 
@@ -79,6 +100,8 @@ pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Vec<Box<Chunk>>, ErrorKind> 
 }
 
 fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<Chunk>>, ErrorKind> {
+    println!("parse_chunk_buffer len: {}", buffer.len());
+
     let mut pos = 0usize;
     let mut iff_chunks: Vec<Box<Chunk>>;
 
@@ -105,26 +128,32 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<Chunk>>, ErrorKind> {
                     _ => return Err(ErrorKind::UnknownFormType),
                 }
 
-                let iff_form_chunk = Box::new(FormIlbmChunk::new(chunk_id.to_string()));
-                iff_chunks.push(iff_form_chunk);
+                let mut iff_form_chunk = FormIlbmChunk::new(chunk_id.to_string());
 
+                // iff_form_chunk.id = String::from("knut");
                 // iff_file.width = 320;
 
                 let form_buffer = &buffer[pos + 12..pos + 12 + chunk_size - 4];
                 println!("form_buffer len: {}", form_buffer.len());
-                let mut form_pos = 0usize;
+                let form_pos = 0usize;
                 // while form_pos < buffer.len() {
                 let form_chunk_id = get_chunk_id(form_buffer, form_pos + 0)?;
                 let form_chunk_size = get_chunk_size(form_buffer, form_pos + 4)?;
                 println!("form_chunk_id: {}", form_chunk_id);
                 println!("form_chunk_size: {}", form_chunk_size);
 
-                form_pos += 8;
-                form_pos += chunk_size;
+                let mut ilbm_children = parse_chunk_buffer(form_buffer)?;
+                iff_form_chunk.get_children().append(&mut ilbm_children);
+                // iff_chunks.
+                // form_pos += 8;
+                // form_pos += chunk_size;
                 // }
                 // parse_iff_chunk()
+                iff_chunks.push(Box::new(iff_form_chunk));
             }
-
+            "BMHD" => {
+                let chunk = UnknownChunk::new(chunk_id.to_string());
+            }
             _ => return Err(ErrorKind::UnknownChunk),
         }
 

@@ -9,7 +9,9 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/target/debug/kru_gfx_conv.exe",
-            "args": [],
+            "args": [
+                "D:\\github\\kru_gfx_conv\\tests\\test01_320_256_256.iff"
+            ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
