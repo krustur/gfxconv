@@ -9,29 +9,49 @@ pub enum ErrorKind {
     FileTooShort,
     UnknownChunk(String),
     ZeroSizeChunk,
-    FoundMultipleChunksInBuffer,
     UnsupportedFormType,
     UnknownFormType,
+    NoChunksFound,
+    MultipleRootChunksFound,
 }
 
-pub trait Chunk {
-    fn get_id(&self) -> &str;
-}
-
-pub trait ParentChunk {
-    fn get_children(&mut self) -> &mut Vec<Box<Chunk>>;
-}
-
-// #[derive(Debug)]
-pub struct FormIlbmChunk {
-    pub id: String,
-    children: Vec<Box<Chunk>>,
-}
-
+// UnknownChunk
 pub struct UnknownChunk {
     pub id: String,
 }
 
+impl UnknownChunk {
+    pub fn new(id: String) -> UnknownChunk {
+        UnknownChunk { id: id }
+    }
+}
+
+// FormIlbmChunk
+// #[derive(Debug)]
+pub struct FormIlbmChunk {
+    pub id: String,
+    pub children: Vec<Box<Chunk>>,
+    pub bmhd: Option<BmhdChunk>,
+}
+
+impl FormIlbmChunk {
+    pub fn new(id: String) -> FormIlbmChunk {
+        FormIlbmChunk {
+            children: Vec::new(),
+            id: id,
+            bmhd: None,
+        }
+    }
+}
+
+impl std::fmt::Debug for FormIlbmChunk {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.id)
+    }
+}
+
+// BmhdChunk
+#[derive(Debug)]
 pub struct BmhdChunk {
     pub id: String,
     pub width: u16,
@@ -48,19 +68,9 @@ pub struct BmhdChunk {
     pub page_height: i16,
 }
 
-impl FormIlbmChunk {
-    pub fn new(id: String) -> FormIlbmChunk {
-        FormIlbmChunk {
-            children: Vec::new(),
-            id: id,
-        }
-    }
-}
-
-impl UnknownChunk {
-    pub fn new(id: String) -> UnknownChunk {
-        UnknownChunk { id: id }
-    }
+// Chunk trait
+pub trait Chunk {
+    fn get_id(&self) -> &str;
 }
 
 impl Chunk for FormIlbmChunk {
@@ -81,19 +91,29 @@ impl Chunk for BmhdChunk {
     }
 }
 
+// ParentChunk
+pub trait ParentChunk {
+    fn get_children(&mut self) -> &mut Vec<Box<Chunk>>;
+}
+
 impl ParentChunk for FormIlbmChunk {
     fn get_children(&mut self) -> &mut Vec<Box<Chunk>> {
         &mut self.children
     }
 }
 
-impl std::fmt::Debug for FormIlbmChunk {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.id)
+// IlbmChild trait
+pub trait IlbmChild {
+    fn attach(&self, ilbm_chunk: FormIlbmChunk);
+}
+
+impl IlbmChild for BmhdChunk {
+    fn attach(&self, ilbm_chunk: FormIlbmChunk) {
+        ilbm_chunk.bmhd = Some(*self);
     }
 }
 
-pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<Vec<Box<Chunk>>, ErrorKind> {
+pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<Box<Chunk>, ErrorKind> {
     println!("file_path {:?}", file_path);
 
     let mut f = match File::open(file_path) {
@@ -106,9 +126,24 @@ pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<Vec<Box<Chunk>>, E
         Err(error) => return Err(ErrorKind::IoError(error)),
     };
 
-    let ending = parse_iff_buffer(&buffer);
-    // println!("ending: {:?}", ending);
-    ending
+    let mut root_chunks = parse_iff_buffer(&buffer)?;
+    // let root_chunks = match root_chunks {
+    //     Ok(chunks) => chunks
+    // }
+    if root_chunks.len() == 0 {
+        return Err(ErrorKind::NoChunksFound);
+    }
+    if root_chunks.len() > 1 {
+        return Err(ErrorKind::MultipleRootChunksFound);
+    }
+
+    let root_chunk = root_chunks.remove(0);
+    // let arne = match root_chunk {
+    //     None => return Err(ErrorKind::NoChunksFound),
+    //     Some(x) => x,
+    // };
+
+    Ok(root_chunk)
 }
 
 pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Vec<Box<Chunk>>, ErrorKind> {
@@ -131,7 +166,7 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<Chunk>>, ErrorKind> {
 
     while pos < buffer.len() {
         let chunk_id = get_chunk_id(buffer, pos + 0)?;
-        let chunk_size = get_chunk_size(buffer, pos + 4)?;
+        let chunk_size = get_u32(buffer, pos + 4)? as usize;
 
         if chunk_size == 0 {
             return Err(ErrorKind::ZeroSizeChunk);
@@ -151,26 +186,16 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<Chunk>>, ErrorKind> {
                 }
 
                 let mut iff_form_chunk = FormIlbmChunk::new(chunk_id.to_string());
-
-                // iff_form_chunk.id = String::from("knut");
-                // iff_file.width = 320;
-
                 let form_buffer = &buffer[pos + 12..pos + 12 + chunk_size - 4];
-                println!("form_buffer len: {}", form_buffer.len());
-                // let form_pos = 0usize;
-                // // while form_pos < buffer.len() {
-                // let form_chunk_id = get_chunk_id(form_buffer, form_pos + 0)?;
-                // let form_chunk_size = get_chunk_size(form_buffer, form_pos + 4)?;
-                // println!("form_chunk_id: {}", form_chunk_id);
-                // println!("form_chunk_size: {}", form_chunk_size);
 
                 let mut ilbm_children = parse_chunk_buffer(form_buffer)?;
+                for child in ilbm_children {
+                    let cccc = *child;
+                    // let d = c as IlbmChild;
+                    //     if child is BmhdChunk
+                }
                 iff_form_chunk.get_children().append(&mut ilbm_children);
-                // iff_chunks.
-                // form_pos += 8;
-                // form_pos += chunk_size;
-                // }
-                // parse_iff_chunk()
+
                 iff_chunks.push(Box::new(iff_form_chunk));
             }
 
@@ -183,7 +208,8 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<Chunk>>, ErrorKind> {
 
             "BMHD" => {
                 // let chunk = UnknownChunk::new(chunk_id.to_string());
-                let chunk = get_bmhd_chunk()?;
+                let chunk = get_bmhd_chunk(buffer, pos)?;
+                println!("Bmhd: {:?}", chunk);
                 iff_chunks.push(Box::new(chunk));
                 // ilbm.Bmhd = new Bmhd(chunk);
                 //
@@ -297,14 +323,15 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<Chunk>>, ErrorKind> {
     Ok(iff_chunks)
 }
 
-fn get_bmhd_chunk() -> Result<BmhdChunk, ErrorKind> {
+fn get_bmhd_chunk(buffer: &[u8], pos: usize) -> Result<BmhdChunk, ErrorKind> {
     let chunk = BmhdChunk {
-        width: 0,
-        height: 0,
-        x: 0,
-        y: 0,
-        number_of_planes: 0,
-        masking: 0,
+        id: String::from("BMHD"),
+        width: get_u16(buffer, pos + 8 + 0)?,
+        height: get_u16(buffer, pos + 8 + 2)?,
+        x: get_i16(buffer, pos + 8 + 4)?,
+        y: get_i16(buffer, pos + 8 + 6)?,
+        number_of_planes: get_u8(buffer, pos + 8 + 8)?,
+        masking: get_u8(buffer, pos + 8 + 9)?,
         compression: 0,
         transparent_color_number: 0,
         x_aspect: 0,
@@ -313,6 +340,7 @@ fn get_bmhd_chunk() -> Result<BmhdChunk, ErrorKind> {
         page_height: 0,
     };
 
+    // let chunk_size = get_u32(buffer, pos + 4)? as usize;
     Ok(chunk)
     // public Bmhd(IffChunk innerIlbmChunk)
     // {
@@ -348,18 +376,48 @@ fn get_chunk_id(buffer: &[u8], pos: usize) -> Result<&str, ErrorKind> {
             return Err(ErrorKind::UnknownChunk(err_msg));
         }
     };
-    println!("group_id {:?}", chunk_id);
+    // println!("group_id {:?}", chunk_id);
 
     Ok(chunk_id2)
 }
 
-fn get_chunk_size(buffer: &[u8], pos: usize) -> Result<usize, ErrorKind> {
-    let chunk_size_slize = &buffer[pos..pos + 4];
-    let mut chunk_size_array: [u8; 4] = [0; 4];
-    chunk_size_array.copy_from_slice(chunk_size_slize);
-    let chunk_size = unsafe { std::mem::transmute::<[u8; 4], u32>(chunk_size_array).to_be() };
-    let chunk_size = chunk_size as usize;
-    println!("chunk_size {:?}", chunk_size);
+fn get_u32(buffer: &[u8], pos: usize) -> Result<u32, ErrorKind> {
+    let slize = &buffer[pos..pos + 4];
+    let mut array: [u8; 4] = [0; 4];
+    array.copy_from_slice(slize);
+    let value = unsafe { std::mem::transmute::<[u8; 4], u32>(array).to_be() };
+    let value = value as u32;
 
-    Ok(chunk_size)
+    Ok(value)
+}
+
+fn get_u16(buffer: &[u8], pos: usize) -> Result<u16, ErrorKind> {
+    let slize = &buffer[pos..pos + 2];
+    let mut array: [u8; 2] = [0; 2];
+    array.copy_from_slice(slize);
+    let value = unsafe { std::mem::transmute::<[u8; 2], u16>(array).to_be() };
+    let value = value as u16;
+
+    Ok(value)
+}
+
+fn get_i16(buffer: &[u8], pos: usize) -> Result<i16, ErrorKind> {
+    let slize = &buffer[pos..pos + 2];
+    let mut array: [u8; 2] = [0; 2];
+    array.copy_from_slice(slize);
+    let value = unsafe { std::mem::transmute::<[u8; 2], i16>(array).to_be() };
+    let value = value as i16;
+
+    Ok(value)
+}
+
+fn get_u8(buffer: &[u8], pos: usize) -> Result<u8, ErrorKind> {
+    // let slize = &buffer[pos..pos + 2];
+    // let mut array: [u8; 2] = [0; 2];
+    // array.copy_from_slice(slize);
+    // let value = unsafe { std::mem::transmute::<[u8; 2], get_u8>(array).to_be() };
+    // let value = value as get_u8;
+
+    let value = buffer[pos];
+    Ok(value)
 }

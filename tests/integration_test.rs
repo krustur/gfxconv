@@ -35,11 +35,21 @@ fn correct_root_chunk_id() {
     );
     assert_eq!(
         "FORM",
-        kru_gfx_conv::read_iff_file(test_path)
-            .unwrap()
-            .pop()
-            .unwrap()
-            .get_id()
+        kru_gfx_conv::read_iff_file(test_path).unwrap().get_id()
+    );
+}
+
+#[test]
+fn correct_bmhd() {
+    let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
+
+    assert_eq!(
+        "D:\\github\\kru_gfx_conv\\tests\\test01_320_256_256.iff",
+        test_path.to_str().unwrap()
+    );
+    assert_eq!(
+        "FORM",
+        kru_gfx_conv::read_iff_file(test_path).unwrap().get_id()
     );
 }
 
