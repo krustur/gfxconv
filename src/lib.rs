@@ -32,6 +32,22 @@ pub struct UnknownChunk {
     pub id: String,
 }
 
+pub struct BmhdChunk {
+    pub id: String,
+    pub width: u16,
+    pub height: u16,
+    pub x: i16,
+    pub y: i16,
+    pub number_of_planes: u8,
+    pub masking: u8,
+    pub compression: u8,
+    pub transparent_color_number: u16,
+    pub x_aspect: u8,
+    pub y_aspect: u8,
+    pub page_width: i16,
+    pub page_height: i16,
+}
+
 impl FormIlbmChunk {
     pub fn new(id: String) -> FormIlbmChunk {
         FormIlbmChunk {
@@ -54,6 +70,12 @@ impl Chunk for FormIlbmChunk {
 }
 
 impl Chunk for UnknownChunk {
+    fn get_id(&self) -> &str {
+        &self.id
+    }
+}
+
+impl Chunk for BmhdChunk {
     fn get_id(&self) -> &str {
         &self.id
     }
@@ -135,12 +157,12 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<Chunk>>, ErrorKind> {
 
                 let form_buffer = &buffer[pos + 12..pos + 12 + chunk_size - 4];
                 println!("form_buffer len: {}", form_buffer.len());
-                let form_pos = 0usize;
-                // while form_pos < buffer.len() {
-                let form_chunk_id = get_chunk_id(form_buffer, form_pos + 0)?;
-                let form_chunk_size = get_chunk_size(form_buffer, form_pos + 4)?;
-                println!("form_chunk_id: {}", form_chunk_id);
-                println!("form_chunk_size: {}", form_chunk_size);
+                // let form_pos = 0usize;
+                // // while form_pos < buffer.len() {
+                // let form_chunk_id = get_chunk_id(form_buffer, form_pos + 0)?;
+                // let form_chunk_size = get_chunk_size(form_buffer, form_pos + 4)?;
+                // println!("form_chunk_id: {}", form_chunk_id);
+                // println!("form_chunk_size: {}", form_chunk_size);
 
                 let mut ilbm_children = parse_chunk_buffer(form_buffer)?;
                 iff_form_chunk.get_children().append(&mut ilbm_children);
@@ -160,7 +182,8 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<Chunk>>, ErrorKind> {
             }
 
             "BMHD" => {
-                let chunk = UnknownChunk::new(chunk_id.to_string());
+                // let chunk = UnknownChunk::new(chunk_id.to_string());
+                let chunk = get_bmhd_chunk()?;
                 iff_chunks.push(Box::new(chunk));
                 // ilbm.Bmhd = new Bmhd(chunk);
                 //
@@ -272,6 +295,41 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<Chunk>>, ErrorKind> {
     }
 
     Ok(iff_chunks)
+}
+
+fn get_bmhd_chunk() -> Result<BmhdChunk, ErrorKind> {
+    let chunk = BmhdChunk {
+        width: 0,
+        height: 0,
+        x: 0,
+        y: 0,
+        number_of_planes: 0,
+        masking: 0,
+        compression: 0,
+        transparent_color_number: 0,
+        x_aspect: 0,
+        y_aspect: 0,
+        page_width: 0,
+        page_height: 0,
+    };
+
+    Ok(chunk)
+    // public Bmhd(IffChunk innerIlbmChunk)
+    // {
+    //     Width = ContentReader.ReadUShort(innerIlbmChunk.Content, 0);
+    //     Height = ContentReader.ReadUShort(innerIlbmChunk.Content, 2);
+    //     X = ContentReader.ReadShort(innerIlbmChunk.Content, 4);
+    //     Y = ContentReader.ReadShort(innerIlbmChunk.Content, 6);
+    //     NumberOfPlanes = ContentReader.ReadUByte(innerIlbmChunk.Content, 8);
+    //     Masking = ContentReader.ReadUByte(innerIlbmChunk.Content, 9);
+    //     Compression = ContentReader.ReadUByte(innerIlbmChunk.Content, 10);
+    //     // UBYTE pad1
+    //     TransparentColorNumber = ContentReader.ReadUShort(innerIlbmChunk.Content, 12);
+    //     XAspect = ContentReader.ReadUByte(innerIlbmChunk.Content, 14);
+    //     YAspect = ContentReader.ReadUByte(innerIlbmChunk.Content, 15);
+    //     PageWidth = ContentReader.ReadShort(innerIlbmChunk.Content, 16);
+    //     PageHeight = ContentReader.ReadShort(innerIlbmChunk.Content, 18);
+    // }
 }
 
 fn get_chunk_id(buffer: &[u8], pos: usize) -> Result<&str, ErrorKind> {
