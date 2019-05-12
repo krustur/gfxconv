@@ -1,5 +1,5 @@
 [package]
-name = "kru_gfx_conv"
+name = "gfxconv"
 version = "0.1.0"
 authors = ["krustur <krustur@gmail.com>"]
 edition = "2018"

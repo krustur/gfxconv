@@ -1,7 +1,11 @@
 // mod model;
+use std::fmt;
 use std::fs::File;
 use std::io;
 use std::io::prelude::*;
+use std::mem;
+use std::path;
+use std::str;
 
 #[derive(Debug)]
 pub enum ErrorKind {
@@ -30,7 +34,7 @@ impl UnknownChunk {
 // #[derive(Debug)]
 pub struct FormIlbmChunk {
     pub id: String,
-    pub children: Vec<Box<Chunk>>,
+    pub children: Vec<Box<dyn Chunk>>,
     pub bmhd: Option<BmhdChunk>,
 }
 
@@ -44,8 +48,8 @@ impl FormIlbmChunk {
     }
 }
 
-impl std::fmt::Debug for FormIlbmChunk {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+impl fmt::Debug for FormIlbmChunk {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.id)
     }
 }
@@ -73,6 +77,12 @@ pub trait Chunk {
     fn get_id(&self) -> &str;
 }
 
+impl fmt::Debug for Chunk {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.get_id())
+    }
+}
+
 impl Chunk for FormIlbmChunk {
     fn get_id(&self) -> &str {
         &self.id
@@ -93,27 +103,27 @@ impl Chunk for BmhdChunk {
 
 // ParentChunk
 pub trait ParentChunk {
-    fn get_children(&mut self) -> &mut Vec<Box<Chunk>>;
+    fn get_children(&mut self) -> &mut Vec<Box<dyn Chunk>>;
 }
 
 impl ParentChunk for FormIlbmChunk {
-    fn get_children(&mut self) -> &mut Vec<Box<Chunk>> {
+    fn get_children(&mut self) -> &mut Vec<Box<dyn Chunk>> {
         &mut self.children
     }
 }
 
 // IlbmChild trait
 pub trait IlbmChild {
-    fn attach(&self, ilbm_chunk: FormIlbmChunk);
+    fn attach(self, ilbm_chunk: &mut FormIlbmChunk);
 }
 
 impl IlbmChild for BmhdChunk {
-    fn attach(&self, ilbm_chunk: FormIlbmChunk) {
-        ilbm_chunk.bmhd = Some(*self);
+    fn attach(self, ilbm_chunk: &mut FormIlbmChunk) {
+        ilbm_chunk.bmhd = Some(self);
     }
 }
 
-pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<Box<Chunk>, ErrorKind> {
+pub fn read_iff_file(file_path: path::PathBuf) -> Result<Box<dyn Chunk>, ErrorKind> {
     println!("file_path {:?}", file_path);
 
     let mut f = match File::open(file_path) {
@@ -146,7 +156,7 @@ pub fn read_iff_file(file_path: std::path::PathBuf) -> Result<Box<Chunk>, ErrorK
     Ok(root_chunk)
 }
 
-pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Vec<Box<Chunk>>, ErrorKind> {
+pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Vec<Box<dyn Chunk>>, ErrorKind> {
     if buffer.len() < 12 {
         return Err(ErrorKind::FileTooShort);
     }
@@ -156,11 +166,11 @@ pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Vec<Box<Chunk>>, ErrorKind> 
     Ok(iff_chunks)
 }
 
-fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<Chunk>>, ErrorKind> {
+fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<dyn Chunk>>, ErrorKind> {
     println!("parse_chunk_buffer len: {}", buffer.len());
 
     let mut pos = 0usize;
-    let mut iff_chunks: Vec<Box<Chunk>>;
+    let mut iff_chunks: Vec<Box<dyn Chunk>>;
 
     iff_chunks = Vec::new();
 
@@ -189,10 +199,12 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<Chunk>>, ErrorKind> {
                 let form_buffer = &buffer[pos + 12..pos + 12 + chunk_size - 4];
 
                 let mut ilbm_children = parse_chunk_buffer(form_buffer)?;
-                for child in ilbm_children {
-                    let cccc = *child;
-                    // let d = c as IlbmChild;
-                    //     if child is BmhdChunk
+                for child in ilbm_children.iter() {
+                    println!("tjoho {:?}", child);
+                    //     //     // let cccc = child.as_ref();
+
+                    //     //     // let d = c as IlbmChild;
+                    //     //     //     if child is BmhdChunk
                 }
                 iff_form_chunk.get_children().append(&mut ilbm_children);
 
@@ -361,11 +373,11 @@ fn get_bmhd_chunk(buffer: &[u8], pos: usize) -> Result<BmhdChunk, ErrorKind> {
 }
 
 fn get_chunk_id(buffer: &[u8], pos: usize) -> Result<&str, ErrorKind> {
-    let chunk_id = std::str::from_utf8(&buffer[pos..pos + 4]);
+    let chunk_id = str::from_utf8(&buffer[pos..pos + 4]);
     let chunk_id2 = match chunk_id {
         Ok(x) => x,
         Err(err) => {
-            let err_msg = std::fmt::format(format_args!(
+            let err_msg = fmt::format(format_args!(
                 "{}: [{:X}] [{:X}] [{:X}] [{:X}]",
                 err,
                 buffer[pos + 0],
@@ -385,7 +397,7 @@ fn get_u32(buffer: &[u8], pos: usize) -> Result<u32, ErrorKind> {
     let slize = &buffer[pos..pos + 4];
     let mut array: [u8; 4] = [0; 4];
     array.copy_from_slice(slize);
-    let value = unsafe { std::mem::transmute::<[u8; 4], u32>(array).to_be() };
+    let value = unsafe { mem::transmute::<[u8; 4], u32>(array).to_be() };
     let value = value as u32;
 
     Ok(value)
@@ -395,7 +407,7 @@ fn get_u16(buffer: &[u8], pos: usize) -> Result<u16, ErrorKind> {
     let slize = &buffer[pos..pos + 2];
     let mut array: [u8; 2] = [0; 2];
     array.copy_from_slice(slize);
-    let value = unsafe { std::mem::transmute::<[u8; 2], u16>(array).to_be() };
+    let value = unsafe { mem::transmute::<[u8; 2], u16>(array).to_be() };
     let value = value as u16;
 
     Ok(value)
@@ -405,7 +417,7 @@ fn get_i16(buffer: &[u8], pos: usize) -> Result<i16, ErrorKind> {
     let slize = &buffer[pos..pos + 2];
     let mut array: [u8; 2] = [0; 2];
     array.copy_from_slice(slize);
-    let value = unsafe { std::mem::transmute::<[u8; 2], i16>(array).to_be() };
+    let value = unsafe { mem::transmute::<[u8; 2], i16>(array).to_be() };
     let value = value as i16;
 
     Ok(value)
@@ -415,7 +427,7 @@ fn get_u8(buffer: &[u8], pos: usize) -> Result<u8, ErrorKind> {
     // let slize = &buffer[pos..pos + 2];
     // let mut array: [u8; 2] = [0; 2];
     // array.copy_from_slice(slize);
-    // let value = unsafe { std::mem::transmute::<[u8; 2], get_u8>(array).to_be() };
+    // let value = unsafe { mem::transmute::<[u8; 2], get_u8>(array).to_be() };
     // let value = value as get_u8;
 
     let value = buffer[pos];

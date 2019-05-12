@@ -1,28 +1,28 @@
-use kru_gfx_conv;
+use gfxconv;
 
 // fn correct_number_of_bitplanes() {
 #[test]
 fn short_file() {
     let test_path = test_util::get_tests_path().join("short_file.iff");
-    assert!(kru_gfx_conv::read_iff_file(test_path).is_err());
+    assert!(gfxconv::read_iff_file(test_path).is_err());
 }
 
 #[test]
 fn not_form_type() {
     let test_path = test_util::get_tests_path().join("not_form.iff");
-    assert!(kru_gfx_conv::read_iff_file(test_path).is_err());
+    assert!(gfxconv::read_iff_file(test_path).is_err());
 }
 
 #[test]
 fn unknown_form_type() {
     let test_path = test_util::get_tests_path().join("unknown_form_type.iff");
-    assert!(kru_gfx_conv::read_iff_file(test_path).is_err());
+    assert!(gfxconv::read_iff_file(test_path).is_err());
 }
 
 #[test]
 fn zero_size_chunk() {
     let test_path = test_util::get_tests_path().join("zero_size_chunk.iff");
-    assert!(kru_gfx_conv::read_iff_file(test_path).is_err());
+    assert!(gfxconv::read_iff_file(test_path).is_err());
 }
 
 #[test]
@@ -30,27 +30,30 @@ fn correct_root_chunk_id() {
     let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
 
     assert_eq!(
-        "D:\\github\\kru_gfx_conv\\tests\\test01_320_256_256.iff",
+        "D:\\github\\gfxconv\\tests\\test01_320_256_256.iff",
         test_path.to_str().unwrap()
     );
-    assert_eq!(
-        "FORM",
-        kru_gfx_conv::read_iff_file(test_path).unwrap().get_id()
-    );
+    assert_eq!("FORM", gfxconv::read_iff_file(test_path).unwrap().get_id());
 }
 
 #[test]
 fn correct_bmhd() {
-    let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
+    // let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
 
-    assert_eq!(
-        "D:\\github\\kru_gfx_conv\\tests\\test01_320_256_256.iff",
-        test_path.to_str().unwrap()
-    );
-    assert_eq!(
-        "FORM",
-        kru_gfx_conv::read_iff_file(test_path).unwrap().get_id()
-    );
+    // assert_eq!(
+    //     "D:\\github\\gfxconv\\tests\\test01_320_256_256.iff",
+    //     test_path.to_str().unwrap()
+    // );
+    // let xxx = gfxconv::read_iff_file(test_path).unwrap()
+    // .downcast::<Box<gfxconv::FormIlbmChunk>>();
+    // //  {
+    // //     Ok(f) => f,
+    // //     Err(other) => { panic!("panik");
+    // //         }
+    // //     };
+    // // // ( ).unwrap().get_children();
+
+    // assert_eq!(256, xxx);
 }
 
 mod test_util {
