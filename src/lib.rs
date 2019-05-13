@@ -181,34 +181,36 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<dyn Chunk>>, ErrorKind> {
     for raw_chunk in raw_chunk_array {
         println!("raw_chunk: {:?}", raw_chunk);
 
-        //     match chunk_id {
-        //         "FORM" => {
-        //             let form_type = get_chunk_id(buffer, pos + 8)?;
-        //             println!("FORM type {}", form_type);
-        //             match form_type {
-        //                 "ILBM" => println!("ILBM"),
-        //                 "ANIM" => {
-        //                     println!("ANIM");
-        //                     return Err(ErrorKind::UnsupportedFormType);
-        //                 }
-        //                 _ => return Err(ErrorKind::UnknownFormType),
-        //             }
+        match raw_chunk.id {
+            "FORM" => {
+                let form_type = raw_chunk.get_str(8)?;
+                println!("FORM type {}", form_type);
+                //             match form_type {
+                //                 "ILBM" => println!("ILBM"),
+                //                 "ANIM" => {
+                //                     println!("ANIM");
+                //                     return Err(ErrorKind::UnsupportedFormType);
+                //                 }
+                //                 _ => return Err(ErrorKind::UnknownFormType),
+                //             }
 
-        //             let mut iff_form_chunk = FormIlbmChunk::new(chunk_id.to_string());
-        //             let form_buffer = &buffer[pos + 12..pos + 12 + chunk_size - 4];
+                //             let mut iff_form_chunk = FormIlbmChunk::new(chunk_id.to_string());
+                //             let form_buffer = &buffer[pos + 12..pos + 12 + chunk_size - 4];
 
-        //             let mut ilbm_children = parse_chunk_buffer(form_buffer)?;
-        //             for child in ilbm_children.iter() {
-        //                 println!("tjoho {:?}", child);
-        //                 //     //     // let cccc = child.as_ref();
+                //             let mut ilbm_children = parse_chunk_buffer(form_buffer)?;
+                //             for child in ilbm_children.iter() {
+                //                 println!("tjoho {:?}", child);
+                //                 //     //     // let cccc = child.as_ref();
 
-        //                 //     //     // let d = c as IlbmChild;
-        //                 //     //     //     if child is BmhdChunk
-        //             }
-        //             iff_form_chunk.get_children().append(&mut ilbm_children);
+                //                 //     //     // let d = c as IlbmChild;
+                //                 //     //     //     if child is BmhdChunk
+                //             }
+                //             iff_form_chunk.get_children().append(&mut ilbm_children);
 
-        //             iff_chunks.push(Box::new(iff_form_chunk));
-        //         }
+                //             iff_chunks.push(Box::new(iff_form_chunk));
+            }
+            _ => return Err(ErrorKind::UnknownChunk(raw_chunk.id.to_string())),
+        }
     }
     //         "ANNO" => {
     //             let chunk = UnknownChunk::new(chunk_id.to_string());

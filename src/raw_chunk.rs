@@ -10,7 +10,7 @@ use std::str;
 
 // #[derive(Debug)]
 pub struct RawChunk<'a> {
-    pub id: String,
+    pub id: &'a str,
     pub size: usize,
     buffer: &'a [u8],
 }
@@ -39,7 +39,7 @@ impl<'a> RawChunk<'a> {
         }
 
         Ok(RawChunk {
-            id: String::from(buffer_reader::get_str(buffer, 0)?),
+            id: buffer_reader::get_str(buffer, 0)?,
             size: size,
             buffer: buffer,
         })
@@ -65,4 +65,15 @@ impl<'a> RawChunk<'a> {
     // fn extract_size(&self) -> Result<u32, ErrorKind> {
     //     self.get_u32(4)
     // }
+
+    pub fn get_str(&self, pos: usize) -> Result<&'a str, ErrorKind> {
+        let val = buffer_reader::get_str(self.buffer, pos)?;
+        Ok(val)
+    }
+    // println!("group_id {:?}", chunk_id);
+
+    pub fn get_u32(&self, pos: usize) -> Result<u32, ErrorKind> {
+        let val = buffer_reader::get_u32(self.buffer, pos)?;
+        Ok(val)
+    }
 }
