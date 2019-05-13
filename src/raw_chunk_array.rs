@@ -41,7 +41,8 @@ impl<'a> Iterator for RawChunkArray<'a> {
 
         // let chunk_id = get_chunk_id(buffer, pos + 0)?;
         // let chunk_size = get_u32(buffer, pos + 4)? as usize;
-        self.pos += raw_chunk.size as usize + 8;
+        self.pos += 8;
+        self.pos += ((raw_chunk.size as usize) + 1) & 0xfffffffffffffffe;
 
         Some(raw_chunk)
 

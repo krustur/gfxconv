@@ -175,46 +175,41 @@ pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Vec<Box<dyn Chunk>>, ErrorKi
 fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<dyn Chunk>>, ErrorKind> {
     // println!("parse_chunk_buffer len: {}", buffer.len());
 
-    // let mut pos = 0usize;
     let mut iff_chunks: Vec<Box<dyn Chunk>> = Vec::new();
 
     let raw_chunk_array = raw_chunk_array::RawChunkArray::from(buffer);
     for raw_chunk in raw_chunk_array {
         println!("raw_chunk: {:?}", raw_chunk);
+
+        //     match chunk_id {
+        //         "FORM" => {
+        //             let form_type = get_chunk_id(buffer, pos + 8)?;
+        //             println!("FORM type {}", form_type);
+        //             match form_type {
+        //                 "ILBM" => println!("ILBM"),
+        //                 "ANIM" => {
+        //                     println!("ANIM");
+        //                     return Err(ErrorKind::UnsupportedFormType);
+        //                 }
+        //                 _ => return Err(ErrorKind::UnknownFormType),
+        //             }
+
+        //             let mut iff_form_chunk = FormIlbmChunk::new(chunk_id.to_string());
+        //             let form_buffer = &buffer[pos + 12..pos + 12 + chunk_size - 4];
+
+        //             let mut ilbm_children = parse_chunk_buffer(form_buffer)?;
+        //             for child in ilbm_children.iter() {
+        //                 println!("tjoho {:?}", child);
+        //                 //     //     // let cccc = child.as_ref();
+
+        //                 //     //     // let d = c as IlbmChild;
+        //                 //     //     //     if child is BmhdChunk
+        //             }
+        //             iff_form_chunk.get_children().append(&mut ilbm_children);
+
+        //             iff_chunks.push(Box::new(iff_form_chunk));
+        //         }
     }
-    //     if chunk_size == 0 {
-    //         return Err(ErrorKind::ZeroSizeChunk);
-    //     }
-
-    //     match chunk_id {
-    //         "FORM" => {
-    //             let form_type = get_chunk_id(buffer, pos + 8)?;
-    //             println!("FORM type {}", form_type);
-    //             match form_type {
-    //                 "ILBM" => println!("ILBM"),
-    //                 "ANIM" => {
-    //                     println!("ANIM");
-    //                     return Err(ErrorKind::UnsupportedFormType);
-    //                 }
-    //                 _ => return Err(ErrorKind::UnknownFormType),
-    //             }
-
-    //             let mut iff_form_chunk = FormIlbmChunk::new(chunk_id.to_string());
-    //             let form_buffer = &buffer[pos + 12..pos + 12 + chunk_size - 4];
-
-    //             let mut ilbm_children = parse_chunk_buffer(form_buffer)?;
-    //             for child in ilbm_children.iter() {
-    //                 println!("tjoho {:?}", child);
-    //                 //     //     // let cccc = child.as_ref();
-
-    //                 //     //     // let d = c as IlbmChild;
-    //                 //     //     //     if child is BmhdChunk
-    //             }
-    //             iff_form_chunk.get_children().append(&mut ilbm_children);
-
-    //             iff_chunks.push(Box::new(iff_form_chunk));
-    //         }
-
     //         "ANNO" => {
     //             let chunk = UnknownChunk::new(chunk_id.to_string());
     //             iff_chunks.push(Box::new(chunk));
@@ -329,11 +324,6 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<dyn Chunk>>, ErrorKind> {
     //         _ => return Err(ErrorKind::UnknownChunk(chunk_id.to_string())),
     //     }
 
-    //     pos += 8;
-    //     pos += (chunk_size + 1) & 0xfffffffffffffffe;
-
-    //     // if pos < buffer.len() {
-    //     //     return Err(ErrorKind::FoundMultipleChunksInBuffer);
     // }
 
     Ok(iff_chunks)
