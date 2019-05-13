@@ -8,9 +8,9 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/target/debug/kru_gfx_conv.exe",
+            "program": "${workspaceFolder}/target/debug/gfxconv.exe",
             "args": [
-                "D:\\github\\kru_gfx_conv\\tests\\test01_320_256_256.iff"
+                "D:\\github\\gfxconv\\tests\\test01_320_256_256.iff"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
