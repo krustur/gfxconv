@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
+#![allow(unused_mut)]
 
 mod buffer_reader;
 mod raw_chunk;
@@ -16,6 +17,7 @@ pub enum ErrorKind {
     IoError(io::Error),
     FileTooShort,
     UnknownChunk(String),
+    ChunkTooShort,
     ZeroSizeChunk,
     UnsupportedFormType,
     UnknownFormType,
@@ -173,20 +175,13 @@ pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Vec<Box<dyn Chunk>>, ErrorKi
 fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<dyn Chunk>>, ErrorKind> {
     // println!("parse_chunk_buffer len: {}", buffer.len());
 
-    let raw_chunk_array = raw_chunk_array::RawChunkArray::from(buffer);
-
     // let mut pos = 0usize;
-    let mut iff_chunks: Vec<Box<dyn Chunk>>;
+    let mut iff_chunks: Vec<Box<dyn Chunk>> = Vec::new();
 
-    iff_chunks = Vec::new();
-
+    let raw_chunk_array = raw_chunk_array::RawChunkArray::from(buffer);
     for raw_chunk in raw_chunk_array {
         println!("raw_chunk: {:?}", raw_chunk);
     }
-    // while pos < buffer.len() {
-    //     let chunk_id = get_chunk_id(buffer, pos + 0)?;
-    //     let chunk_size = get_u32(buffer, pos + 4)? as usize;
-
     //     if chunk_size == 0 {
     //         return Err(ErrorKind::ZeroSizeChunk);
     //     }

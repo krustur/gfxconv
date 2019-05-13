@@ -29,9 +29,18 @@ impl<'a> fmt::Debug for RawChunk<'a> {
 
 impl<'a> RawChunk<'a> {
     pub fn from(buffer: &'a [u8]) -> Result<RawChunk, ErrorKind> {
+        if buffer.len() < 8 {
+            return Err(ErrorKind::ChunkTooShort);
+        };
+
+        let size = buffer_reader::get_u32(buffer, 4)? as usize;
+        if size == 0 {
+            return Err(ErrorKind::ZeroSizeChunk);
+        }
+
         Ok(RawChunk {
             id: String::from(buffer_reader::get_str(buffer, 0)?),
-            size: buffer_reader::get_u32(buffer, 4)? as usize,
+            size: size,
             buffer: buffer,
         })
     }
