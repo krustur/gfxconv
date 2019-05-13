@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_mut)]
+#![allow(unused_variables)]
 
 mod buffer_reader;
 mod raw_chunk;
@@ -142,18 +143,18 @@ pub fn read_iff_file(file_path: path::PathBuf) -> Result<Box<dyn Chunk>, ErrorKi
         Err(error) => return Err(ErrorKind::IoError(error)),
     };
 
-    let mut root_chunks = parse_iff_buffer(&buffer)?;
+    let root_chunk = parse_iff_buffer(&buffer)?;
     // let root_chunks = match root_chunks {
     //     Ok(chunks) => chunks
     // }
-    if root_chunks.len() == 0 {
-        return Err(ErrorKind::NoChunksFound);
-    }
-    if root_chunks.len() > 1 {
-        return Err(ErrorKind::MultipleRootChunksFound);
-    }
+    // if root_chunks.len() == 0 {
+    //     return Err(ErrorKind::NoChunksFound);
+    // }
+    // if root_chunks.len() > 1 {
+    //     return Err(ErrorKind::MultipleRootChunksFound);
+    // }
 
-    let root_chunk = root_chunks.remove(0);
+    // let root_chunk = root_chunks.remove(0);
     // let arne = match root_chunk {
     //     None => return Err(ErrorKind::NoChunksFound),
     //     Some(x) => x,
@@ -162,55 +163,67 @@ pub fn read_iff_file(file_path: path::PathBuf) -> Result<Box<dyn Chunk>, ErrorKi
     Ok(root_chunk)
 }
 
-pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Vec<Box<dyn Chunk>>, ErrorKind> {
+pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Box<dyn Chunk>, ErrorKind> {
     if buffer.len() < 12 {
         return Err(ErrorKind::FileTooShort);
     }
 
-    let iff_chunks = parse_chunk_buffer(buffer)?;
+    let iff_chunk = parse_chunk_buffer(buffer)?;
 
-    Ok(iff_chunks)
+    Ok(iff_chunk)
 }
 
-fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<dyn Chunk>>, ErrorKind> {
+fn parse_chunk_buffer(buffer: &[u8]) -> Result<Box<dyn Chunk>, ErrorKind> {
     // println!("parse_chunk_buffer len: {}", buffer.len());
 
-    let mut iff_chunks: Vec<Box<dyn Chunk>> = Vec::new();
+    // let mut iff_chunks: Vec<Box<dyn Chunk>> = Vec::new();
 
-    let raw_chunk_array = raw_chunk_array::RawChunkArray::from(buffer);
-    for raw_chunk in raw_chunk_array {
-        println!("raw_chunk: {:?}", raw_chunk);
+    let mut raw_chunk_array = raw_chunk_array::RawChunkArray::from(buffer);
+    let raw_root_chunk = match raw_chunk_array.next() {
+        Some(chunk) => chunk,
+        None => return Err(ErrorKind::NoChunksFound),
+    };
 
-        match raw_chunk.id {
-            "FORM" => {
-                let form_type = raw_chunk.get_str(8)?;
-                println!("FORM type {}", form_type);
-                //             match form_type {
-                //                 "ILBM" => println!("ILBM"),
-                //                 "ANIM" => {
-                //                     println!("ANIM");
-                //                     return Err(ErrorKind::UnsupportedFormType);
-                //                 }
-                //                 _ => return Err(ErrorKind::UnknownFormType),
-                //             }
+    match raw_chunk_array.next() {
+        Some(_) => (),
+        None => return Err(ErrorKind::MultipleRootChunksFound),
+    };
 
-                //             let mut iff_form_chunk = FormIlbmChunk::new(chunk_id.to_string());
-                //             let form_buffer = &buffer[pos + 12..pos + 12 + chunk_size - 4];
+    // for raw_chunk in raw_chunk_array {
+    println!("raw_root_chunk: {:?}", raw_root_chunk);
 
-                //             let mut ilbm_children = parse_chunk_buffer(form_buffer)?;
-                //             for child in ilbm_children.iter() {
-                //                 println!("tjoho {:?}", child);
-                //                 //     //     // let cccc = child.as_ref();
+    match raw_root_chunk.id {
+        "FORM" => {
+            let form_type = raw_root_chunk.get_str(8)?;
+            println!("FORM type {}", form_type);
+            let root_chunk = match form_type {
+                "ILBM" => {
+                    println!("ILBM");
+                    FormIlbmChunk::new(raw_root_chunk.id.to_string())
+                }
+                "ANIM" => {
+                    println!("ANIM");
+                    return Err(ErrorKind::UnsupportedFormType);
+                }
+                _ => return Err(ErrorKind::UnknownFormType),
+            };
 
-                //                 //     //     // let d = c as IlbmChild;
-                //                 //     //     //     if child is BmhdChunk
-                //             }
-                //             iff_form_chunk.get_children().append(&mut ilbm_children);
+            //             let mut iff_form_chunk = FormIlbmChunk::new(chunk_id.to_string());
+            //             let form_buffer = &buffer[pos + 12..pos + 12 + chunk_size - 4];
 
-                //             iff_chunks.push(Box::new(iff_form_chunk));
-            }
-            _ => return Err(ErrorKind::UnknownChunk(raw_chunk.id.to_string())),
+            //             let mut ilbm_children = parse_chunk_buffer(form_buffer)?;
+            //             for child in ilbm_children.iter() {
+            //                 println!("tjoho {:?}", child);
+            //                 //     //     // let cccc = child.as_ref();
+
+            //                 //     //     // let d = c as IlbmChild;
+            //                 //     //     //     if child is BmhdChunk
+            //             }
+            //             iff_form_chunk.get_children().append(&mut ilbm_children);
+
+            //             iff_chunks.push(Box::new(iff_form_chunk));
         }
+        _ => return Err(ErrorKind::UnknownChunk(raw_root_chunk.id.to_string())),
     }
     //         "ANNO" => {
     //             let chunk = UnknownChunk::new(chunk_id.to_string());
@@ -328,7 +341,7 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Vec<Box<dyn Chunk>>, ErrorKind> {
 
     // }
 
-    Ok(iff_chunks)
+    Ok(Box::new(FormIlbmChunk::new(String::from("NOPE"))))
 }
 
 // fn get_bmhd_chunk(buffer: &[u8], pos: usize) -> Result<BmhdChunk, ErrorKind> {
