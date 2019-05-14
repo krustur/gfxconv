@@ -6,6 +6,7 @@
 mod buffer_reader;
 mod raw_chunk;
 mod raw_chunk_array;
+use std::cmp;
 use std::fmt;
 use std::fs::File;
 use std::io;
@@ -14,7 +15,9 @@ use std::path;
 use std::str;
 
 #[derive(Debug)]
+// #[derive(PartialEq)]
 pub enum ErrorKind {
+    NotError,
     IoError(io::Error),
     FileTooShort,
     UnknownChunk(String),
@@ -24,6 +27,57 @@ pub enum ErrorKind {
     UnknownFormType,
     NoChunksFound,
     MultipleRootChunksFound,
+}
+
+impl std::cmp::PartialEq for ErrorKind {
+    fn eq(&self, other: &ErrorKind) -> bool {
+        match self {
+            ErrorKind::IoError(s) => {
+                match other {
+                    ErrorKind::IoError(o) => false, //TODO: Compare io errors
+                    _ => false,
+                }
+            }
+            ErrorKind::UnknownChunk(s) => match other {
+                ErrorKind::UnknownChunk(o) => s == o,
+                _ => false,
+            },
+            ErrorKind::NotError => match other {
+                ErrorKind::NotError => true,
+                _ => false,
+            },
+            ErrorKind::FileTooShort => match other {
+                ErrorKind::FileTooShort => true,
+                _ => false,
+            },
+            ErrorKind::ChunkTooShort => match other {
+                ErrorKind::ChunkTooShort => true,
+                _ => false,
+            },
+            ErrorKind::ZeroSizeChunk => match other {
+                ErrorKind::ZeroSizeChunk => true,
+                _ => false,
+            },
+            ErrorKind::UnsupportedFormType => match other {
+                ErrorKind::UnsupportedFormType => true,
+                _ => false,
+            },
+            ErrorKind::UnknownFormType => match other {
+                ErrorKind::UnknownFormType => true,
+                _ => false,
+            },
+            ErrorKind::NoChunksFound => match other {
+                ErrorKind::NoChunksFound => true,
+                _ => false,
+            },
+            ErrorKind::MultipleRootChunksFound => match other {
+                ErrorKind::MultipleRootChunksFound => true,
+                _ => false,
+            },
+            // _ => self == other,
+        }
+        // self == other
+    }
 }
 
 // UnknownChunk
@@ -165,7 +219,7 @@ pub fn read_iff_file(file_path: path::PathBuf) -> Result<Box<dyn Chunk>, ErrorKi
 
 pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Box<dyn Chunk>, ErrorKind> {
     if buffer.len() < 12 {
-        return Err(ErrorKind::FileTooShort);
+        return Err(ErrorKind::NotError);
     }
 
     let iff_chunk = parse_chunk_buffer(buffer)?;

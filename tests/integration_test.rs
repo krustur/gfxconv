@@ -1,10 +1,12 @@
 use gfxconv;
+use gfxconv::ErrorKind;
 
 // fn correct_number_of_bitplanes() {
 #[test]
 fn short_file() {
     let test_path = test_util::get_tests_path().join("short_file.iff");
-    assert!(gfxconv::read_iff_file(test_path).is_err());
+    let res = gfxconv::read_iff_file(test_path);
+    test_util::assert_error(ErrorKind::FileTooShort, res);
 }
 
 #[test]
@@ -57,6 +59,8 @@ fn correct_bmhd() {
 }
 
 mod test_util {
+    use gfxconv::ErrorKind;
+
     pub fn get_tests_path() -> std::path::PathBuf {
         let exe_path = std::env::current_exe().unwrap();
         let test_path = exe_path
@@ -71,5 +75,10 @@ mod test_util {
             .join("tests");
         // let test_path_str = test_path.to_str().unwrap();
         return test_path;
+    }
+
+    pub fn assert_error<T>(expected: ErrorKind, result: Result<T, ErrorKind>) {
+        let actual = result.err().unwrap();
+        assert_eq!(expected, actual);
     }
 }
