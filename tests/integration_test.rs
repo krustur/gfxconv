@@ -12,13 +12,15 @@ fn short_file() {
 #[test]
 fn not_form_type() {
     let test_path = test_util::get_tests_path().join("not_form.iff");
-    assert!(gfxconv::read_iff_file(test_path).is_err());
+    let res = gfxconv::read_iff_file(test_path);
+    test_util::assert_error(ErrorKind::UnknownChunk(String::from("FORN")), res);
 }
 
 #[test]
 fn unknown_form_type() {
     let test_path = test_util::get_tests_path().join("unknown_form_type.iff");
-    assert!(gfxconv::read_iff_file(test_path).is_err());
+    let res = gfxconv::read_iff_file(test_path);
+    test_util::assert_error(ErrorKind::UnknownFormType, res);
 }
 
 #[test]

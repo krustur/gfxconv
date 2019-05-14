@@ -17,7 +17,6 @@ use std::str;
 #[derive(Debug)]
 // #[derive(PartialEq)]
 pub enum ErrorKind {
-    NotError,
     IoError(io::Error),
     FileTooShort,
     UnknownChunk(String),
@@ -40,10 +39,6 @@ impl std::cmp::PartialEq for ErrorKind {
             }
             ErrorKind::UnknownChunk(s) => match other {
                 ErrorKind::UnknownChunk(o) => s == o,
-                _ => false,
-            },
-            ErrorKind::NotError => match other {
-                ErrorKind::NotError => true,
                 _ => false,
             },
             ErrorKind::FileTooShort => match other {
@@ -219,7 +214,7 @@ pub fn read_iff_file(file_path: path::PathBuf) -> Result<Box<dyn Chunk>, ErrorKi
 
 pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Box<dyn Chunk>, ErrorKind> {
     if buffer.len() < 12 {
-        return Err(ErrorKind::NotError);
+        return Err(ErrorKind::FileTooShort);
     }
 
     let iff_chunk = parse_chunk_buffer(buffer)?;
@@ -231,20 +226,20 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Box<dyn Chunk>, ErrorKind> {
     // println!("parse_chunk_buffer len: {}", buffer.len());
 
     // let mut iff_chunks: Vec<Box<dyn Chunk>> = Vec::new();
-    println!("A");
+    // println!("A");
 
     let mut raw_chunk_array = raw_chunk_array::RawChunkArray::from(buffer);
     let raw_root_chunk = match raw_chunk_array.next() {
         Some(chunk) => chunk,
         None => return Err(ErrorKind::NoChunksFound),
     };
-    println!("B");
+    // println!("B");
 
     match raw_chunk_array.next() {
         Some(_) => return Err(ErrorKind::MultipleRootChunksFound),
         None => (),
     };
-    println!("C");
+    // println!("C");
 
     // for raw_chunk in raw_chunk_array {
     println!("raw_root_chunk: {:?}", raw_root_chunk);

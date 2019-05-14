@@ -27,7 +27,7 @@ impl<'a> Iterator for RawChunkArray<'a> {
             Err(_) => return None,
         };
 
-        println!("pos: {:?}", self.pos);
+        // println!("pos: {:?}", self.pos);
         self.pos += 8;
         self.pos += ((raw_chunk.size as usize) + 1) & 0xfffffffffffffffe;
 
