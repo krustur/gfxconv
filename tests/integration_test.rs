@@ -26,7 +26,8 @@ fn unknown_form_type() {
 #[test]
 fn zero_size_chunk() {
     let test_path = test_util::get_tests_path().join("zero_size_chunk.iff");
-    assert!(gfxconv::read_iff_file(test_path).is_err());
+    let res = gfxconv::read_iff_file(test_path);
+    test_util::assert_error(ErrorKind::ZeroSizeChunk, res);
 }
 
 #[test]
