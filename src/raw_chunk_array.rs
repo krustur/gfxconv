@@ -24,7 +24,7 @@ impl<'a> Iterator for RawChunkArray<'a> {
 
         let raw_chunk = match RawChunk::from(self.buffer, self.pos) {
             Ok(chunk) => chunk,
-            Err(_) => return None,
+            Err(_) => return None, // TODO: This is a problem! How to Handle Errors?
         };
 
         // println!("pos: {:?}", self.pos);

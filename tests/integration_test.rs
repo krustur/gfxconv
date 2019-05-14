@@ -38,7 +38,7 @@ fn correct_root_chunk_id() {
         "D:\\github\\gfxconv\\tests\\test01_320_256_256.iff",
         test_path.to_str().unwrap()
     );
-    assert_eq!("FORM", gfxconv::read_iff_file(test_path).unwrap().get_id());
+    assert_eq!("FORM", gfxconv::read_iff_file(test_path).unwrap().id);
 }
 
 #[test]

@@ -90,14 +90,14 @@ impl UnknownChunk {
 // #[derive(Debug)]
 pub struct FormIlbmChunk {
     pub id: String,
-    pub children: Vec<Box<dyn Chunk>>,
+    // pub children: Vec<Box<dyn Chunk>>,
     pub bmhd: Option<BmhdChunk>,
 }
 
 impl FormIlbmChunk {
     pub fn new(id: String) -> FormIlbmChunk {
         FormIlbmChunk {
-            children: Vec::new(),
+            // children: Vec::new(),
             id: id,
             bmhd: None,
         }
@@ -128,58 +128,58 @@ pub struct BmhdChunk {
     pub page_height: i16,
 }
 
-// Chunk trait
-pub trait Chunk {
-    fn get_id(&self) -> &str;
-}
+// // Chunk trait
+// pub trait Chunk {
+//     fn get_id(&self) -> &str;
+// }
 
-impl fmt::Debug for Chunk {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.get_id())
-    }
-}
+// impl fmt::Debug for Chunk {
+//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+//         write!(f, "{}", self.get_id())
+//     }
+// }
 
-impl Chunk for FormIlbmChunk {
-    fn get_id(&self) -> &str {
-        &self.id
-    }
-}
+// impl Chunk for FormIlbmChunk {
+//     fn get_id(&self) -> &str {
+//         &self.id
+//     }
+// }
 
-impl Chunk for UnknownChunk {
-    fn get_id(&self) -> &str {
-        &self.id
-    }
-}
+// impl Chunk for UnknownChunk {
+//     fn get_id(&self) -> &str {
+//         &self.id
+//     }
+// }
 
-impl Chunk for BmhdChunk {
-    fn get_id(&self) -> &str {
-        &self.id
-    }
-}
+// impl Chunk for BmhdChunk {
+//     fn get_id(&self) -> &str {
+//         &self.id
+//     }
+// }
 
-// ParentChunk
-pub trait ParentChunk {
-    fn get_children(&mut self) -> &mut Vec<Box<dyn Chunk>>;
-}
+// // ParentChunk
+// pub trait ParentChunk {
+//     fn get_children(&mut self) -> &mut Vec<Box<dyn Chunk>>;
+// }
 
-impl ParentChunk for FormIlbmChunk {
-    fn get_children(&mut self) -> &mut Vec<Box<dyn Chunk>> {
-        &mut self.children
-    }
-}
+// impl ParentChunk for FormIlbmChunk {
+//     fn get_children(&mut self) -> &mut Vec<Box<dyn Chunk>> {
+//         &mut self.children
+//     }
+// }
 
-// IlbmChild trait
-pub trait IlbmChild {
-    fn attach(self, ilbm_chunk: &mut FormIlbmChunk);
-}
+// // IlbmChild trait
+// pub trait IlbmChild {
+//     fn attach(self, ilbm_chunk: &mut FormIlbmChunk);
+// }
 
-impl IlbmChild for BmhdChunk {
-    fn attach(self, ilbm_chunk: &mut FormIlbmChunk) {
-        ilbm_chunk.bmhd = Some(self);
-    }
-}
+// impl IlbmChild for BmhdChunk {
+//     fn attach(self, ilbm_chunk: &mut FormIlbmChunk) {
+//         ilbm_chunk.bmhd = Some(self);
+//     }
+// }
 
-pub fn read_iff_file(file_path: path::PathBuf) -> Result<Box<dyn Chunk>, ErrorKind> {
+pub fn read_iff_file(file_path: path::PathBuf) -> Result<Box<FormIlbmChunk>, ErrorKind> {
     println!("file_path {:?}", file_path);
 
     let mut f = match File::open(file_path) {
@@ -212,34 +212,33 @@ pub fn read_iff_file(file_path: path::PathBuf) -> Result<Box<dyn Chunk>, ErrorKi
     Ok(root_chunk)
 }
 
-pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Box<dyn Chunk>, ErrorKind> {
+pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Box<FormIlbmChunk>, ErrorKind> {
     if buffer.len() < 12 {
         return Err(ErrorKind::FileTooShort);
     }
 
-    let iff_chunk = parse_chunk_buffer(buffer)?;
+    let iff_chunk = parse_form_ilbm_buffer(buffer)?;
 
     Ok(iff_chunk)
 }
 
-fn parse_chunk_buffer(buffer: &[u8]) -> Result<Box<dyn Chunk>, ErrorKind> {
+fn parse_form_ilbm_buffer(buffer: &[u8]) -> Result<Box<FormIlbmChunk>, ErrorKind> {
     // println!("parse_chunk_buffer len: {}", buffer.len());
 
     // let mut iff_chunks: Vec<Box<dyn Chunk>> = Vec::new();
-    // println!("A");
 
     let mut raw_chunk_array = raw_chunk_array::RawChunkArray::from(buffer);
     let raw_root_chunk = match raw_chunk_array.next() {
         Some(chunk) => chunk,
         None => return Err(ErrorKind::NoChunksFound),
     };
-    // println!("B");
 
     match raw_chunk_array.next() {
         Some(_) => return Err(ErrorKind::MultipleRootChunksFound),
         None => (),
     };
-    // println!("C");
+
+    let mut iff_form_chunk: FormIlbmChunk;
 
     // for raw_chunk in raw_chunk_array {
     println!("raw_root_chunk: {:?}", raw_root_chunk);
@@ -251,7 +250,7 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Box<dyn Chunk>, ErrorKind> {
             let root_chunk = match form_type {
                 "ILBM" => {
                     println!("ILBM");
-                    let mut iff_form_chunk = FormIlbmChunk::new(raw_root_chunk.id.to_string());
+                    iff_form_chunk = FormIlbmChunk::new(raw_root_chunk.id.to_string());
                     let form_buffer = raw_root_chunk.get_slice_to_end(12);
                     let mut form_raw_chunk_array =
                         raw_chunk_array::RawChunkArray::from(form_buffer);
@@ -394,7 +393,7 @@ fn parse_chunk_buffer(buffer: &[u8]) -> Result<Box<dyn Chunk>, ErrorKind> {
 
     // }
 
-    Ok(Box::new(FormIlbmChunk::new(String::from("NOPE"))))
+    Ok(Box::new(iff_form_chunk))
 }
 
 // fn get_bmhd_chunk(buffer: &[u8], pos: usize) -> Result<BmhdChunk, ErrorKind> {
