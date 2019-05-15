@@ -259,23 +259,11 @@ fn parse_form_ilbm_buffer(buffer: &[u8]) -> Result<FormIlbmChunk, ErrorKind> {
                     println!("ILBM");
                     iff_form_chunk = FormIlbmChunk::new(raw_root_chunk.id.to_string());
                     let form_buffer = raw_root_chunk.get_slice_to_end(12);
+
                     let mut form_raw_chunk_array =
                         raw_chunk_array::RawChunkArray::from(form_buffer);
-                    let mut form_raw_chunk = form_raw_chunk_array.get_first()?;
-                    while let Some(chunk) = form_raw_chunk {
-                        //             let mut ilbm_children = parse_chunk_buffer(form_buffer)?;
-                        //             for child in ilbm_children.iter() {
-                        println!("tjoho {:?} {:?}", chunk.id, chunk.size);
-                        //                 //     //     // let cccc = child.as_ref();
 
-                        //                 //     //     // let d = c as IlbmChild;
-                        //                 //     //     //     if child is BmhdChunk
-                        //             }
-                        form_raw_chunk = form_raw_chunk_array.get_next()?
-                    }
-                    //             iff_form_chunk.get_children().append(&mut ilbm_children);
-
-                    //             iff_chunks.push(Box::new(iff_form_chunk));
+                    parse_bmhd_buffer(&mut form_raw_chunk_array, &mut iff_form_chunk)?;
                 }
                 "ANIM" => {
                     println!("ANIM");
@@ -405,6 +393,28 @@ fn parse_form_ilbm_buffer(buffer: &[u8]) -> Result<FormIlbmChunk, ErrorKind> {
     Ok(iff_form_chunk)
 }
 
+fn parse_bmhd_buffer(
+    raw_chunk_array: &mut raw_chunk_array::RawChunkArray,
+    form_ilbm_chunk: &mut FormIlbmChunk,
+) -> Result<(), ErrorKind> {
+    let mut raw_chunk = raw_chunk_array.get_first()?;
+    while let Some(chunk) = raw_chunk {
+        //             let mut ilbm_children = parse_chunk_buffer(form_buffer)?;
+        //             for child in ilbm_children.iter() {
+        println!("tjoho {:?} {:?}", chunk.id, chunk.size);
+        //                 //     //     // let cccc = child.as_ref();
+
+        //                 //     //     // let d = c as IlbmChild;
+        //                 //     //     //     if child is BmhdChunk
+        //             }
+        raw_chunk = raw_chunk_array.get_next()?
+    }
+    //             iff_form_chunk.get_children().append(&mut ilbm_children);
+
+    //             iff_chunks.push(Box::new(iff_form_chunk));
+
+    Ok(())
+}
 // fn get_bmhd_chunk(buffer: &[u8], pos: usize) -> Result<BmhdChunk, ErrorKind> {
 //     let chunk = BmhdChunk {
 //         id: String::from("BMHD"),
