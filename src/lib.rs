@@ -75,6 +75,11 @@ impl std::cmp::PartialEq for ErrorKind {
     }
 }
 
+#[derive(Debug)]
+pub struct IffFile {
+    pub form_ilbm_chunk: FormIlbmChunk,
+}
+
 // UnknownChunk
 pub struct UnknownChunk {
     pub id: String,
@@ -179,7 +184,7 @@ pub struct BmhdChunk {
 //     }
 // }
 
-pub fn read_iff_file(file_path: path::PathBuf) -> Result<Box<FormIlbmChunk>, ErrorKind> {
+pub fn read_iff_file(file_path: path::PathBuf) -> Result<IffFile, ErrorKind> {
     println!("file_path {:?}", file_path);
 
     let mut f = match File::open(file_path) {
@@ -192,7 +197,7 @@ pub fn read_iff_file(file_path: path::PathBuf) -> Result<Box<FormIlbmChunk>, Err
         Err(error) => return Err(ErrorKind::IoError(error)),
     };
 
-    let root_chunk = parse_iff_buffer(&buffer)?;
+    let iff_file = parse_iff_buffer(&buffer)?;
     // let root_chunks = match root_chunks {
     //     Ok(chunks) => chunks
     // }
@@ -209,20 +214,22 @@ pub fn read_iff_file(file_path: path::PathBuf) -> Result<Box<FormIlbmChunk>, Err
     //     Some(x) => x,
     // };
 
-    Ok(root_chunk)
+    Ok(iff_file)
 }
 
-pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<Box<FormIlbmChunk>, ErrorKind> {
+pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<IffFile, ErrorKind> {
     if buffer.len() < 12 {
         return Err(ErrorKind::FileTooShort);
     }
 
-    let iff_chunk = parse_form_ilbm_buffer(buffer)?;
+    let iff_file = IffFile {
+        form_ilbm_chunk: parse_form_ilbm_buffer(buffer)?,
+    };
 
-    Ok(iff_chunk)
+    Ok(iff_file)
 }
 
-fn parse_form_ilbm_buffer(buffer: &[u8]) -> Result<Box<FormIlbmChunk>, ErrorKind> {
+fn parse_form_ilbm_buffer(buffer: &[u8]) -> Result<FormIlbmChunk, ErrorKind> {
     // println!("parse_chunk_buffer len: {}", buffer.len());
 
     // let mut iff_chunks: Vec<Box<dyn Chunk>> = Vec::new();
@@ -395,7 +402,7 @@ fn parse_form_ilbm_buffer(buffer: &[u8]) -> Result<Box<FormIlbmChunk>, ErrorKind
 
     // }
 
-    Ok(Box::new(iff_form_chunk))
+    Ok(iff_form_chunk)
 }
 
 // fn get_bmhd_chunk(buffer: &[u8], pos: usize) -> Result<BmhdChunk, ErrorKind> {
