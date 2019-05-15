@@ -29,6 +29,7 @@ pub enum ErrorKind {
     NoChunksFound,
     MultipleRootChunksFound,
     UnknownIlbmChunk(String),
+    InvalidChunkSize,
 }
 
 impl std::cmp::PartialEq for ErrorKind {
@@ -76,6 +77,10 @@ impl std::cmp::PartialEq for ErrorKind {
                 ErrorKind::UnknownIlbmChunk(o) => s == o,
                 _ => false,
             },
+            ErrorKind::InvalidChunkSize => match other {
+                ErrorKind::InvalidChunkSize => true,
+                _ => false,
+            },
         }
     }
 }
@@ -102,6 +107,7 @@ pub struct FormIlbmChunk {
     pub id: String,
     // pub children: Vec<Box<dyn Chunk>>,
     pub bmhd: Option<BmhdChunk>,
+    pub cmap: Option<CmapChunk>,
 }
 
 impl FormIlbmChunk {
@@ -110,6 +116,7 @@ impl FormIlbmChunk {
             // children: Vec::new(),
             id: id,
             bmhd: None,
+            cmap: None,
         }
     }
 }
@@ -138,6 +145,19 @@ pub struct BmhdChunk {
     pub page_height: i16,
 }
 
+#[derive(Clone, Debug)]
+pub struct ColRgbU8 {
+    r: u8,
+    g: u8,
+    b: u8,
+}
+
+#[derive(Debug)]
+pub struct CmapChunk {
+    // pub rgb: &'a [ColRgbU8],
+    pub rgb: Vec<ColRgbU8>,
+}
+
 pub fn read_iff_file(file_path: path::PathBuf) -> Result<IffFile, ErrorKind> {
     println!("file_path {:?}", file_path);
 
@@ -153,6 +173,10 @@ pub fn read_iff_file(file_path: path::PathBuf) -> Result<IffFile, ErrorKind> {
 
     let iff_file = parse_iff_buffer(&buffer)?;
 
+    // let iff_file_no = IffFile {
+    //     ilbm: FormIlbmChunk::new(String::from("SVETLANA")),
+    // };
+
     Ok(iff_file)
 }
 
@@ -161,6 +185,9 @@ pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<IffFile, ErrorKind> {
         return Err(ErrorKind::FileTooShort);
     }
 
+    // let iff_file = IffFile {
+    //     ilbm: FormIlbmChunk::new(String::from("SVETLANA")),
+    // };
     let iff_file = IffFile {
         ilbm: parse_form_ilbm_buffer(buffer)?,
     };
@@ -235,10 +262,9 @@ fn parse_ilbm_buffer(
             }
 
             "CMAP" => {
-                // let chunk = get_cmap_chunk(&chunk)?;
-                // println!("Bmhd: {:?}", chunk);
-                // ilbm.bmhd = Some(chunk);
-
+                let chunk = get_cmap_chunk(&chunk)?;
+                println!("Cmap: {:?}", chunk);
+                ilbm.cmap = Some(chunk);
                 // iff_chunks.push(Box::new(chunk));
                 // ilbm.Cmap = new Cmap(chunk, ilbm);
                 //
@@ -359,40 +385,13 @@ fn get_bmhd_chunk(chunk: &RawChunk) -> Result<BmhdChunk, ErrorKind> {
     };
 
     Ok(chunk)
-    // public Bmhd(IffChunk innerIlbmChunk)
-    // {
-    //     Width = ContentReader.ReadUShort(innerIlbmChunk.Content, 0);
-    //     Height = ContentReader.ReadUShort(innerIlbmChunk.Content, 2);
-    //     X = ContentReader.ReadShort(innerIlbmChunk.Content, 4);
-    //     Y = ContentReader.ReadShort(innerIlbmChunk.Content, 6);
-    //     NumberOfPlanes = ContentReader.ReadUByte(innerIlbmChunk.Content, 8);
-    //     Masking = ContentReader.ReadUByte(innerIlbmChunk.Content, 9);
-    //     Compression = ContentReader.ReadUByte(innerIlbmChunk.Content, 10);
-    //     // UBYTE pad1
-    //     TransparentColorNumber = ContentReader.ReadUShort(innerIlbmChunk.Content, 12);
-    //     XAspect = ContentReader.ReadUByte(innerIlbmChunk.Content, 14);
-    //     YAspect = ContentReader.ReadUByte(innerIlbmChunk.Content, 15);
-    //     PageWidth = ContentReader.ReadShort(innerIlbmChunk.Content, 16);
-    //     PageHeight = ContentReader.ReadShort(innerIlbmChunk.Content, 18);
-    // }
 }
 
-fn get_cmap_chunk(chunk: &RawChunk) -> Result<BmhdChunk, ErrorKind> {
-    // let chunk = BmhdChunk {
-    //     id: String::from("BMHD"),
-    //     width: chunk.get_u16(8 + 0)?,
-    //     height: chunk.get_u16(8 + 2)?,
-    //     x: chunk.get_i16(8 + 4)?,
-    //     y: chunk.get_i16(8 + 6)?,
-    //     number_of_planes: chunk.get_u8(8 + 8)?,
-    //     masking: chunk.get_u8(8 + 9)?,
-    //     compression: chunk.get_u8(8 + 10)?,
-    //     transparent_color_number: chunk.get_u16(8 + 12)?,
-    //     x_aspect: chunk.get_u8(8 + 14)?,
-    //     y_aspect: chunk.get_u8(8 + 15)?,
-    //     page_width: chunk.get_i16(8 + 16)?,
-    //     page_height: chunk.get_i16(8 + 18)?,
-    // };
+fn get_cmap_chunk(chunk: &RawChunk) -> Result<CmapChunk, ErrorKind> {
+    let no_colors = (chunk.size) / 3;
+    let chunk = CmapChunk {
+        rgb: vec![ColRgbU8 { r: 0, g: 0, b: 0 }; no_colors],
+    };
 
-    Err(ErrorKind::FileTooShort) //TODO: No
+    Ok(chunk)
 }

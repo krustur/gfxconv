@@ -39,6 +39,11 @@ impl<'a> RawChunk<'a> {
             return Err(ErrorKind::ZeroSizeChunk);
         }
 
+        // if size != buffer.len() - 8 {
+        //     println!("Invalid chunk size: {:?} - {:?}", size, buffer.len() - 8);
+        //     return Err(ErrorKind::InvalidChunkSize);
+        // }
+
         Ok(RawChunk {
             id: id,
             size: size,

@@ -65,6 +65,33 @@ fn correct_bmhd() {
     assert_eq!(256, bmhd.page_height, "bmhd page_height");
 }
 
+#[test]
+fn correct_cmap() {
+    let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
+
+    let cmap = gfxconv::read_iff_file(test_path)
+        .unwrap()
+        .ilbm
+        .cmap
+        .unwrap();
+
+    assert_eq!(256, cmap.rgb.len(), "cmap.rgb.len");
+    // assert_eq!(256, bmhd.height, "bmhd heigth");
+    // assert_eq!(0, bmhd.x, "bmhd x");
+    // assert_eq!(0, bmhd.y, "bmhd y");
+    // assert_eq!(8, bmhd.number_of_planes, "bmhd number_of_planes");
+    // assert_eq!(0, bmhd.masking, "bmhd masking");
+    // assert_eq!(1, bmhd.compression, "bmhd compression");
+    // assert_eq!(
+    //     0, bmhd.transparent_color_number,
+    //     "bmhd transparent_color_number"
+    // );
+    // assert_eq!(44, bmhd.x_aspect, "bmhd x_aspect");
+    // assert_eq!(44, bmhd.y_aspect, "bmhd y_aspect");
+    // assert_eq!(320, bmhd.page_width, "bmhd page_width");
+    // assert_eq!(256, bmhd.page_height, "bmhd page_height");
+}
+
 mod test_util {
     use gfxconv::ErrorKind;
 
