@@ -34,37 +34,32 @@ fn zero_size_chunk() {
 fn correct_root_chunk_id() {
     let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
 
-    assert_eq!(
-        "D:\\github\\gfxconv\\tests\\test01_320_256_256.iff",
-        test_path.to_str().unwrap()
-    );
-    assert_eq!(
-        "FORM",
-        gfxconv::read_iff_file(test_path)
-            .unwrap()
-            .form_ilbm_chunk
-            .id
-    );
+    let ilbm = gfxconv::read_iff_file(test_path).unwrap().ilbm;
+    assert_eq!("FORM", ilbm.id);
 }
 
 #[test]
 fn correct_bmhd() {
-    // let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
+    let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
 
-    // assert_eq!(
-    //     "D:\\github\\gfxconv\\tests\\test01_320_256_256.iff",
-    //     test_path.to_str().unwrap()
-    // );
-    // let xxx = gfxconv::read_iff_file(test_path).unwrap()
-    // .downcast::<Box<gfxconv::FormIlbmChunk>>();
-    // //  {
-    // //     Ok(f) => f,
-    // //     Err(other) => { panic!("panik");
-    // //         }
-    // //     };
-    // // // ( ).unwrap().get_children();
+    let bmhd = gfxconv::read_iff_file(test_path)
+        .unwrap()
+        .ilbm
+        .bmhd
+        .unwrap();
 
-    // assert_eq!(256, xxx);
+    assert_eq!(320, bmhd.width);
+    assert_eq!(256, bmhd.height);
+    assert_eq!(0, bmhd.x);
+    assert_eq!(0, bmhd.y);
+    assert_eq!(8, bmhd.number_of_planes);
+    assert_eq!(0, bmhd.masking);
+    assert_eq!(0, bmhd.compression);
+    assert_eq!(0, bmhd.transparent_color_number);
+    assert_eq!(0, bmhd.x_aspect);
+    assert_eq!(0, bmhd.y_aspect);
+    assert_eq!(0, bmhd.page_width);
+    assert_eq!(0, bmhd.page_height);
 }
 
 mod test_util {

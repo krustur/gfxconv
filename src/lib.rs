@@ -6,6 +6,8 @@
 mod buffer_reader;
 mod raw_chunk;
 mod raw_chunk_array;
+use raw_chunk::RawChunk;
+use raw_chunk_array::RawChunkArray;
 use std::cmp;
 use std::fmt;
 use std::fs::File;
@@ -26,6 +28,7 @@ pub enum ErrorKind {
     UnknownFormType,
     NoChunksFound,
     MultipleRootChunksFound,
+    UnknownIlbmChunk(String),
 }
 
 impl std::cmp::PartialEq for ErrorKind {
@@ -69,15 +72,17 @@ impl std::cmp::PartialEq for ErrorKind {
                 ErrorKind::MultipleRootChunksFound => true,
                 _ => false,
             },
-            // _ => self == other,
+            ErrorKind::UnknownIlbmChunk(s) => match other {
+                ErrorKind::UnknownIlbmChunk(o) => s == o,
+                _ => false,
+            },
         }
-        // self == other
     }
 }
 
 #[derive(Debug)]
 pub struct IffFile {
-    pub form_ilbm_chunk: FormIlbmChunk,
+    pub ilbm: FormIlbmChunk,
 }
 
 // UnknownChunk
@@ -223,7 +228,7 @@ pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<IffFile, ErrorKind> {
     }
 
     let iff_file = IffFile {
-        form_ilbm_chunk: parse_form_ilbm_buffer(buffer)?,
+        ilbm: parse_form_ilbm_buffer(buffer)?,
     };
 
     Ok(iff_file)
@@ -234,7 +239,7 @@ fn parse_form_ilbm_buffer(buffer: &[u8]) -> Result<FormIlbmChunk, ErrorKind> {
 
     // let mut iff_chunks: Vec<Box<dyn Chunk>> = Vec::new();
 
-    let mut raw_chunk_array = raw_chunk_array::RawChunkArray::from(buffer);
+    let mut raw_chunk_array = RawChunkArray::from(buffer);
     let raw_root_chunk = match raw_chunk_array.get_first()? {
         Some(chunk) => chunk,
         None => return Err(ErrorKind::NoChunksFound),
@@ -260,11 +265,11 @@ fn parse_form_ilbm_buffer(buffer: &[u8]) -> Result<FormIlbmChunk, ErrorKind> {
                     iff_form_chunk = FormIlbmChunk::new(raw_root_chunk.id.to_string());
                     let form_buffer = raw_root_chunk.get_slice_to_end(12);
 
-                    let mut form_raw_chunk_array =
-                        raw_chunk_array::RawChunkArray::from(form_buffer);
+                    let mut form_raw_chunk_array = RawChunkArray::from(form_buffer);
 
-                    parse_bmhd_buffer(&mut form_raw_chunk_array, &mut iff_form_chunk)?;
+                    parse_ilbm_buffer(&mut form_raw_chunk_array, &mut iff_form_chunk)?;
                 }
+                // TODO: Move to separate method
                 "ANIM" => {
                     println!("ANIM");
                     return Err(ErrorKind::UnsupportedFormType);
@@ -274,128 +279,13 @@ fn parse_form_ilbm_buffer(buffer: &[u8]) -> Result<FormIlbmChunk, ErrorKind> {
         }
         _ => return Err(ErrorKind::UnknownChunk(raw_root_chunk.id.to_string())),
     }
-    //         "ANNO" => {
-    //             let chunk = UnknownChunk::new(chunk_id.to_string());
-    //             iff_chunks.push(Box::new(chunk));
-    //             // ilbm.Anno = Encoding.UTF8.GetString(chunk.Content, 0, (int)chunk.ContentLength);
-    //             //
-    //         }
-
-    //         "BMHD" => {
-    //             // let chunk = UnknownChunk::new(chunk_id.to_string());
-    //             let chunk = get_bmhd_chunk(buffer, pos)?;
-    //             println!("Bmhd: {:?}", chunk);
-    //             iff_chunks.push(Box::new(chunk));
-    //             // ilbm.Bmhd = new Bmhd(chunk);
-    //             //
-    //         }
-
-    //         "CMAP" => {
-    //             let chunk = UnknownChunk::new(chunk_id.to_string());
-    //             iff_chunks.push(Box::new(chunk));
-    //             // ilbm.Cmap = new Cmap(chunk, ilbm);
-    //             //
-    //         }
-    //         //
-    //         "CAMG" => {
-    //             let chunk = UnknownChunk::new(chunk_id.to_string());
-    //             iff_chunks.push(Box::new(chunk));
-    //             // ilbm.Camg = new Camg(chunk);
-    //             //
-    //         }
-
-    //         "BODY" => {
-    //             let chunk = UnknownChunk::new(chunk_id.to_string());
-    //             iff_chunks.push(Box::new(chunk));
-    //             // ilbm.Body = new Body(chunk, ilbm);
-    //             //
-    //         }
-
-    //         "ANHD" => {
-    //             let chunk = UnknownChunk::new(chunk_id.to_string());
-    //             iff_chunks.push(Box::new(chunk));
-    //             // ilbm.Anhd = new Anhd(chunk);
-    //             //
-    //         }
-
-    //         "DLTA" => {
-    //             let chunk = UnknownChunk::new(chunk_id.to_string());
-    //             iff_chunks.push(Box::new(chunk));
-    //             //                 ilbm.Dlta = new Dlta(chunk, ilbm, iffFile);
-    //             //
-    //         }
-
-    //         "DPPS" => {
-    //             let chunk = UnknownChunk::new(chunk_id.to_string());
-    //             iff_chunks.push(Box::new(chunk));
-    //             // //todo: Handle DPPS
-    //             // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
-    //             //
-    //         }
-    //         "DRNG" => {
-    //             let chunk = UnknownChunk::new(chunk_id.to_string());
-    //             iff_chunks.push(Box::new(chunk));
-    //         }
-    //         //DPaint IV enhanced color cycle chunk (EA)
-    //         // http://wiki.amigaos.net/wiki/ILBM_IFF_Interleaved_Bitmap
-    //         // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
-    //         "BRNG" => {
-    //             let chunk = UnknownChunk::new(chunk_id.to_string());
-    //             iff_chunks.push(Box::new(chunk));
-    //             //unknown
-    //             // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
-    //         }
-
-    //         "CRNG" => {
-    //             let chunk = UnknownChunk::new(chunk_id.to_string());
-    //             iff_chunks.push(Box::new(chunk));
-    //             // color register range
-    //             // http://wiki.amigaos.net/wiki/ILBM_IFF_Interleaved_Bitmap
-    //             // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
-    //         }
-
-    //         "DPI " => {
-    //             let chunk = UnknownChunk::new(chunk_id.to_string());
-    //             iff_chunks.push(Box::new(chunk));
-    //             // Dots per inch chunk
-    //             // http://wiki.amigaos.net/wiki/ILBM_IFF_Interleaved_Bitmap
-    //             // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
-    //         }
-
-    //         "GRAB" => {
-    //             let chunk = UnknownChunk::new(chunk_id.to_string());
-    //             iff_chunks.push(Box::new(chunk));
-    //             // locates a “handle” or “hotspot”
-    //             // http://wiki.amigaos.net/wiki/ILBM_IFF_Interleaved_Bitmap
-    //             // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
-    //         }
-
-    //         "DPXT" => {
-    //             let chunk = UnknownChunk::new(chunk_id.to_string());
-    //             iff_chunks.push(Box::new(chunk));
-    //             // unknown
-    //             // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
-    //         }
-
-    //         "TINY" => {
-    //             let chunk = UnknownChunk::new(chunk_id.to_string());
-    //             iff_chunks.push(Box::new(chunk));
-    //             // Thumbnail
-    //             // https://en.m.wikipedia.org/wiki/ILBM
-    //             // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
-    //         }
-
-    //         _ => return Err(ErrorKind::UnknownChunk(chunk_id.to_string())),
-    //     }
-
-    // }
 
     Ok(iff_form_chunk)
 }
 
-fn parse_bmhd_buffer(
-    raw_chunk_array: &mut raw_chunk_array::RawChunkArray,
-    form_ilbm_chunk: &mut FormIlbmChunk,
+fn parse_ilbm_buffer(
+    raw_chunk_array: &mut RawChunkArray,
+    ilbm: &mut FormIlbmChunk,
 ) -> Result<(), ErrorKind> {
     let mut raw_chunk = raw_chunk_array.get_first()?;
     while let Some(chunk) = raw_chunk {
@@ -407,7 +297,124 @@ fn parse_bmhd_buffer(
         //                 //     //     // let d = c as IlbmChild;
         //                 //     //     //     if child is BmhdChunk
         //             }
-        raw_chunk = raw_chunk_array.get_next()?
+
+        match chunk.id {
+            "ANNO" => {
+                let chunk = UnknownChunk::new(chunk.id.to_string());
+                // iff_chunks.push(Box::new(chunk));
+                // ilbm.Anno = Encoding.UTF8.GetString(chunk.Content, 0, (int)chunk.ContentLength);
+                //
+            }
+
+            "BMHD" => {
+                // let chunk = UnknownChunk::new(chunk_id.to_string());
+                let chunk = get_bmhd_chunk(&chunk)?;
+                println!("Bmhd: {:?}", chunk);
+                ilbm.bmhd = Some(chunk);
+                // iff_chunks.push(Box::new(chunk));
+                // ilbm.Bmhd = new Bmhd(chunk);
+                //
+            }
+
+            "CMAP" => {
+                let chunk = UnknownChunk::new(chunk.id.to_string());
+                // iff_chunks.push(Box::new(chunk));
+                // ilbm.Cmap = new Cmap(chunk, ilbm);
+                //
+            }
+            //
+            "CAMG" => {
+                let chunk = UnknownChunk::new(chunk.id.to_string());
+                // iff_chunks.push(Box::new(chunk));
+                // ilbm.Camg = new Camg(chunk);
+                //
+            }
+
+            "BODY" => {
+                let chunk = UnknownChunk::new(chunk.id.to_string());
+                // iff_chunks.push(Box::new(chunk));
+                // ilbm.Body = new Body(chunk, ilbm);
+                //
+            }
+
+            "ANHD" => {
+                let chunk = UnknownChunk::new(chunk.id.to_string());
+                // iff_chunks.push(Box::new(chunk));
+                // ilbm.Anhd = new Anhd(chunk);
+                //
+            }
+
+            "DLTA" => {
+                let chunk = UnknownChunk::new(chunk.id.to_string());
+                // iff_chunks.push(Box::new(chunk));
+                //                 ilbm.Dlta = new Dlta(chunk, ilbm, iffFile);
+                //
+            }
+
+            "DPPS" => {
+                let chunk = UnknownChunk::new(chunk.id.to_string());
+                // iff_chunks.push(Box::new(chunk));
+                // //todo: Handle DPPS
+                // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+                //
+            }
+            "DRNG" => {
+                let chunk = UnknownChunk::new(chunk.id.to_string());
+                // iff_chunks.push(Box::new(chunk));
+            }
+            //DPaint IV enhanced color cycle chunk (EA)
+            // http://wiki.amigaos.net/wiki/ILBM_IFF_Interleaved_Bitmap
+            // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+            "BRNG" => {
+                let chunk = UnknownChunk::new(chunk.id.to_string());
+                // iff_chunks.push(Box::new(chunk));
+                //unknown
+                // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+            }
+
+            "CRNG" => {
+                let chunk = UnknownChunk::new(chunk.id.to_string());
+                // iff_chunks.push(Box::new(chunk));
+                // color register range
+                // http://wiki.amigaos.net/wiki/ILBM_IFF_Interleaved_Bitmap
+                // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+            }
+
+            "DPI " => {
+                let chunk = UnknownChunk::new(chunk.id.to_string());
+                // iff_chunks.push(Box::new(chunk));
+                // Dots per inch chunk
+                // http://wiki.amigaos.net/wiki/ILBM_IFF_Interleaved_Bitmap
+                // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+            }
+
+            "GRAB" => {
+                let chunk = UnknownChunk::new(chunk.id.to_string());
+                // iff_chunks.push(Box::new(chunk));
+                // locates a “handle” or “hotspot”
+                // http://wiki.amigaos.net/wiki/ILBM_IFF_Interleaved_Bitmap
+                // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+            }
+
+            "DPXT" => {
+                let chunk = UnknownChunk::new(chunk.id.to_string());
+                // iff_chunks.push(Box::new(chunk));
+                // unknown
+                // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+            }
+
+            "TINY" => {
+                let chunk = UnknownChunk::new(chunk.id.to_string());
+                // iff_chunks.push(Box::new(chunk));
+                // Thumbnail
+                // https://en.m.wikipedia.org/wiki/ILBM
+                // _logger.Information($"Unsupported ILBM inner chunk [{chunk.TypeId}]");
+            }
+
+            _ => return Err(ErrorKind::UnknownIlbmChunk(chunk.id.to_string())),
+        }
+
+        raw_chunk = raw_chunk_array.get_next()?;
     }
     //             iff_form_chunk.get_children().append(&mut ilbm_children);
 
@@ -415,39 +422,40 @@ fn parse_bmhd_buffer(
 
     Ok(())
 }
-// fn get_bmhd_chunk(buffer: &[u8], pos: usize) -> Result<BmhdChunk, ErrorKind> {
-//     let chunk = BmhdChunk {
-//         id: String::from("BMHD"),
-//         width: get_u16(buffer, pos + 8 + 0)?,
-//         height: get_u16(buffer, pos + 8 + 2)?,
-//         x: get_i16(buffer, pos + 8 + 4)?,
-//         y: get_i16(buffer, pos + 8 + 6)?,
-//         number_of_planes: get_u8(buffer, pos + 8 + 8)?,
-//         masking: get_u8(buffer, pos + 8 + 9)?,
-//         compression: 0,
-//         transparent_color_number: 0,
-//         x_aspect: 0,
-//         y_aspect: 0,
-//         page_width: 0,
-//         page_height: 0,
-//     };
 
-//     // let chunk_size = get_u32(buffer, pos + 4)? as usize;
-//     Ok(chunk)
-//     // public Bmhd(IffChunk innerIlbmChunk)
-//     // {
-//     //     Width = ContentReader.ReadUShort(innerIlbmChunk.Content, 0);
-//     //     Height = ContentReader.ReadUShort(innerIlbmChunk.Content, 2);
-//     //     X = ContentReader.ReadShort(innerIlbmChunk.Content, 4);
-//     //     Y = ContentReader.ReadShort(innerIlbmChunk.Content, 6);
-//     //     NumberOfPlanes = ContentReader.ReadUByte(innerIlbmChunk.Content, 8);
-//     //     Masking = ContentReader.ReadUByte(innerIlbmChunk.Content, 9);
-//     //     Compression = ContentReader.ReadUByte(innerIlbmChunk.Content, 10);
-//     //     // UBYTE pad1
-//     //     TransparentColorNumber = ContentReader.ReadUShort(innerIlbmChunk.Content, 12);
-//     //     XAspect = ContentReader.ReadUByte(innerIlbmChunk.Content, 14);
-//     //     YAspect = ContentReader.ReadUByte(innerIlbmChunk.Content, 15);
-//     //     PageWidth = ContentReader.ReadShort(innerIlbmChunk.Content, 16);
-//     //     PageHeight = ContentReader.ReadShort(innerIlbmChunk.Content, 18);
-//     // }
-// }
+fn get_bmhd_chunk(chunk: &RawChunk) -> Result<BmhdChunk, ErrorKind> {
+    let chunk = BmhdChunk {
+        id: String::from("BMHD"),
+        width: chunk.get_u16(8 + 0)?,
+        height: chunk.get_u16(8 + 2)?,
+        x: chunk.get_i16(8 + 4)?,
+        y: chunk.get_i16(8 + 6)?,
+        number_of_planes: chunk.get_u8(8 + 8)?,
+        masking: chunk.get_u8(8 + 9)?,
+        compression: 0,
+        transparent_color_number: 0,
+        x_aspect: 0,
+        y_aspect: 0,
+        page_width: 0,
+        page_height: 0,
+    };
+
+    // let chunk_size = get_u32(buffer, pos + 4)? as usize;
+    Ok(chunk)
+    // public Bmhd(IffChunk innerIlbmChunk)
+    // {
+    //     Width = ContentReader.ReadUShort(innerIlbmChunk.Content, 0);
+    //     Height = ContentReader.ReadUShort(innerIlbmChunk.Content, 2);
+    //     X = ContentReader.ReadShort(innerIlbmChunk.Content, 4);
+    //     Y = ContentReader.ReadShort(innerIlbmChunk.Content, 6);
+    //     NumberOfPlanes = ContentReader.ReadUByte(innerIlbmChunk.Content, 8);
+    //     Masking = ContentReader.ReadUByte(innerIlbmChunk.Content, 9);
+    //     Compression = ContentReader.ReadUByte(innerIlbmChunk.Content, 10);
+    //     // UBYTE pad1
+    //     TransparentColorNumber = ContentReader.ReadUShort(innerIlbmChunk.Content, 12);
+    //     XAspect = ContentReader.ReadUByte(innerIlbmChunk.Content, 14);
+    //     YAspect = ContentReader.ReadUByte(innerIlbmChunk.Content, 15);
+    //     PageWidth = ContentReader.ReadShort(innerIlbmChunk.Content, 16);
+    //     PageHeight = ContentReader.ReadShort(innerIlbmChunk.Content, 18);
+    // }
+}
