@@ -138,57 +138,6 @@ pub struct BmhdChunk {
     pub page_height: i16,
 }
 
-// // Chunk trait
-// pub trait Chunk {
-//     fn get_id(&self) -> &str;
-// }
-
-// impl fmt::Debug for Chunk {
-//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-//         write!(f, "{}", self.get_id())
-//     }
-// }
-
-// impl Chunk for FormIlbmChunk {
-//     fn get_id(&self) -> &str {
-//         &self.id
-//     }
-// }
-
-// impl Chunk for UnknownChunk {
-//     fn get_id(&self) -> &str {
-//         &self.id
-//     }
-// }
-
-// impl Chunk for BmhdChunk {
-//     fn get_id(&self) -> &str {
-//         &self.id
-//     }
-// }
-
-// // ParentChunk
-// pub trait ParentChunk {
-//     fn get_children(&mut self) -> &mut Vec<Box<dyn Chunk>>;
-// }
-
-// impl ParentChunk for FormIlbmChunk {
-//     fn get_children(&mut self) -> &mut Vec<Box<dyn Chunk>> {
-//         &mut self.children
-//     }
-// }
-
-// // IlbmChild trait
-// pub trait IlbmChild {
-//     fn attach(self, ilbm_chunk: &mut FormIlbmChunk);
-// }
-
-// impl IlbmChild for BmhdChunk {
-//     fn attach(self, ilbm_chunk: &mut FormIlbmChunk) {
-//         ilbm_chunk.bmhd = Some(self);
-//     }
-// }
-
 pub fn read_iff_file(file_path: path::PathBuf) -> Result<IffFile, ErrorKind> {
     println!("file_path {:?}", file_path);
 
@@ -203,21 +152,6 @@ pub fn read_iff_file(file_path: path::PathBuf) -> Result<IffFile, ErrorKind> {
     };
 
     let iff_file = parse_iff_buffer(&buffer)?;
-    // let root_chunks = match root_chunks {
-    //     Ok(chunks) => chunks
-    // }
-    // if root_chunks.len() == 0 {
-    //     return Err(ErrorKind::NoChunksFound);
-    // }
-    // if root_chunks.len() > 1 {
-    //     return Err(ErrorKind::MultipleRootChunksFound);
-    // }
-
-    // let root_chunk = root_chunks.remove(0);
-    // let arne = match root_chunk {
-    //     None => return Err(ErrorKind::NoChunksFound),
-    //     Some(x) => x,
-    // };
 
     Ok(iff_file)
 }
@@ -235,10 +169,6 @@ pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<IffFile, ErrorKind> {
 }
 
 fn parse_form_ilbm_buffer(buffer: &[u8]) -> Result<FormIlbmChunk, ErrorKind> {
-    // println!("parse_chunk_buffer len: {}", buffer.len());
-
-    // let mut iff_chunks: Vec<Box<dyn Chunk>> = Vec::new();
-
     let mut raw_chunk_array = RawChunkArray::from(buffer);
     let raw_root_chunk = match raw_chunk_array.get_first()? {
         Some(chunk) => chunk,
@@ -252,7 +182,6 @@ fn parse_form_ilbm_buffer(buffer: &[u8]) -> Result<FormIlbmChunk, ErrorKind> {
 
     let mut iff_form_chunk: FormIlbmChunk;
 
-    // for raw_chunk in raw_chunk_array {
     println!("raw_root_chunk: {:?}", raw_root_chunk);
 
     match raw_root_chunk.id {
@@ -269,7 +198,7 @@ fn parse_form_ilbm_buffer(buffer: &[u8]) -> Result<FormIlbmChunk, ErrorKind> {
 
                     parse_ilbm_buffer(&mut form_raw_chunk_array, &mut iff_form_chunk)?;
                 }
-                // TODO: Move to separate method
+                // TODO: Move to separate method, decide for anim or ilbm earlier
                 "ANIM" => {
                     println!("ANIM");
                     return Err(ErrorKind::UnsupportedFormType);
@@ -289,14 +218,7 @@ fn parse_ilbm_buffer(
 ) -> Result<(), ErrorKind> {
     let mut raw_chunk = raw_chunk_array.get_first()?;
     while let Some(chunk) = raw_chunk {
-        //             let mut ilbm_children = parse_chunk_buffer(form_buffer)?;
-        //             for child in ilbm_children.iter() {
         println!("tjoho {:?} {:?}", chunk.id, chunk.size);
-        //                 //     //     // let cccc = child.as_ref();
-
-        //                 //     //     // let d = c as IlbmChild;
-        //                 //     //     //     if child is BmhdChunk
-        //             }
 
         match chunk.id {
             "ANNO" => {
@@ -307,17 +229,16 @@ fn parse_ilbm_buffer(
             }
 
             "BMHD" => {
-                // let chunk = UnknownChunk::new(chunk_id.to_string());
                 let chunk = get_bmhd_chunk(&chunk)?;
                 println!("Bmhd: {:?}", chunk);
                 ilbm.bmhd = Some(chunk);
-                // iff_chunks.push(Box::new(chunk));
-                // ilbm.Bmhd = new Bmhd(chunk);
-                //
             }
 
             "CMAP" => {
-                let chunk = UnknownChunk::new(chunk.id.to_string());
+                // let chunk = get_cmap_chunk(&chunk)?;
+                // println!("Bmhd: {:?}", chunk);
+                // ilbm.bmhd = Some(chunk);
+
                 // iff_chunks.push(Box::new(chunk));
                 // ilbm.Cmap = new Cmap(chunk, ilbm);
                 //
@@ -416,9 +337,6 @@ fn parse_ilbm_buffer(
 
         raw_chunk = raw_chunk_array.get_next()?;
     }
-    //             iff_form_chunk.get_children().append(&mut ilbm_children);
-
-    //             iff_chunks.push(Box::new(iff_form_chunk));
 
     Ok(())
 }
@@ -432,15 +350,14 @@ fn get_bmhd_chunk(chunk: &RawChunk) -> Result<BmhdChunk, ErrorKind> {
         y: chunk.get_i16(8 + 6)?,
         number_of_planes: chunk.get_u8(8 + 8)?,
         masking: chunk.get_u8(8 + 9)?,
-        compression: 0,
-        transparent_color_number: 0,
-        x_aspect: 0,
-        y_aspect: 0,
-        page_width: 0,
-        page_height: 0,
+        compression: chunk.get_u8(8 + 10)?,
+        transparent_color_number: chunk.get_u16(8 + 12)?,
+        x_aspect: chunk.get_u8(8 + 14)?,
+        y_aspect: chunk.get_u8(8 + 15)?,
+        page_width: chunk.get_i16(8 + 16)?,
+        page_height: chunk.get_i16(8 + 18)?,
     };
 
-    // let chunk_size = get_u32(buffer, pos + 4)? as usize;
     Ok(chunk)
     // public Bmhd(IffChunk innerIlbmChunk)
     // {
@@ -458,4 +375,24 @@ fn get_bmhd_chunk(chunk: &RawChunk) -> Result<BmhdChunk, ErrorKind> {
     //     PageWidth = ContentReader.ReadShort(innerIlbmChunk.Content, 16);
     //     PageHeight = ContentReader.ReadShort(innerIlbmChunk.Content, 18);
     // }
+}
+
+fn get_cmap_chunk(chunk: &RawChunk) -> Result<BmhdChunk, ErrorKind> {
+    // let chunk = BmhdChunk {
+    //     id: String::from("BMHD"),
+    //     width: chunk.get_u16(8 + 0)?,
+    //     height: chunk.get_u16(8 + 2)?,
+    //     x: chunk.get_i16(8 + 4)?,
+    //     y: chunk.get_i16(8 + 6)?,
+    //     number_of_planes: chunk.get_u8(8 + 8)?,
+    //     masking: chunk.get_u8(8 + 9)?,
+    //     compression: chunk.get_u8(8 + 10)?,
+    //     transparent_color_number: chunk.get_u16(8 + 12)?,
+    //     x_aspect: chunk.get_u8(8 + 14)?,
+    //     y_aspect: chunk.get_u8(8 + 15)?,
+    //     page_width: chunk.get_i16(8 + 16)?,
+    //     page_height: chunk.get_i16(8 + 18)?,
+    // };
+
+    Err(ErrorKind::FileTooShort) //TODO: No
 }
