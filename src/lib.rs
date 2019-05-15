@@ -228,12 +228,12 @@ fn parse_form_ilbm_buffer(buffer: &[u8]) -> Result<Box<FormIlbmChunk>, ErrorKind
     // let mut iff_chunks: Vec<Box<dyn Chunk>> = Vec::new();
 
     let mut raw_chunk_array = raw_chunk_array::RawChunkArray::from(buffer);
-    let raw_root_chunk = match raw_chunk_array.next() {
+    let raw_root_chunk = match raw_chunk_array.get_first()? {
         Some(chunk) => chunk,
         None => return Err(ErrorKind::NoChunksFound),
     };
 
-    match raw_chunk_array.next() {
+    match raw_chunk_array.get_next()? {
         Some(_) => return Err(ErrorKind::MultipleRootChunksFound),
         None => (),
     };
@@ -254,15 +254,17 @@ fn parse_form_ilbm_buffer(buffer: &[u8]) -> Result<Box<FormIlbmChunk>, ErrorKind
                     let form_buffer = raw_root_chunk.get_slice_to_end(12);
                     let mut form_raw_chunk_array =
                         raw_chunk_array::RawChunkArray::from(form_buffer);
-                    for form_raw_chunk in form_raw_chunk_array {
+                    let mut form_raw_chunk = form_raw_chunk_array.get_first()?;
+                    while let Some(chunk) = form_raw_chunk {
                         //             let mut ilbm_children = parse_chunk_buffer(form_buffer)?;
                         //             for child in ilbm_children.iter() {
-                        println!("tjoho {:?} {:?}", form_raw_chunk.id, form_raw_chunk.size);
+                        println!("tjoho {:?} {:?}", chunk.id, chunk.size);
                         //                 //     //     // let cccc = child.as_ref();
 
                         //                 //     //     // let d = c as IlbmChild;
                         //                 //     //     //     if child is BmhdChunk
                         //             }
+                        form_raw_chunk = form_raw_chunk_array.get_next()?
                     }
                     //             iff_form_chunk.get_children().append(&mut ilbm_children);
 
