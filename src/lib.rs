@@ -154,7 +154,6 @@ pub struct ColRgbU8 {
 
 // #[derive(Debug)]
 pub struct CmapChunk {
-    // pub rgb: &'a [ColRgbU8],
     pub rgb: Vec<ColRgbU8>,
 }
 
@@ -166,7 +165,6 @@ impl fmt::Debug for CmapChunk {
             let wr = write!(f, "{:?} ", self.rgb[i])?;
         }
         Ok(())
-        // write!(f, "0b{:08b}", self.0)
     }
 }
 
@@ -185,10 +183,6 @@ pub fn read_iff_file(file_path: path::PathBuf) -> Result<IffFile, ErrorKind> {
 
     let iff_file = parse_iff_buffer(&buffer)?;
 
-    // let iff_file_no = IffFile {
-    //     ilbm: FormIlbmChunk::new(String::from("SVETLANA")),
-    // };
-
     Ok(iff_file)
 }
 
@@ -197,9 +191,6 @@ pub fn parse_iff_buffer(buffer: &Vec<u8>) -> Result<IffFile, ErrorKind> {
         return Err(ErrorKind::FileTooShort);
     }
 
-    // let iff_file = IffFile {
-    //     ilbm: FormIlbmChunk::new(String::from("SVETLANA")),
-    // };
     let iff_file = IffFile {
         ilbm: parse_form_ilbm_buffer(buffer)?,
     };
