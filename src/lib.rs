@@ -145,11 +145,17 @@ pub struct BmhdChunk {
     pub page_height: i16,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct ColRgbU8 {
-    r: u8,
-    g: u8,
-    b: u8,
+    pub r: u8,
+    pub g: u8,
+    pub b: u8,
+}
+
+impl fmt::Debug for ColRgbU8 {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:02X}-{:02X}-{:02X}", self.r, self.g, self.b)
+    }
 }
 
 // #[derive(Debug)]
@@ -370,31 +376,37 @@ fn parse_ilbm_buffer(
     Ok(())
 }
 
-fn get_bmhd_chunk(chunk: &RawChunk) -> Result<BmhdChunk, ErrorKind> {
+fn get_bmhd_chunk(raw_chunk: &RawChunk) -> Result<BmhdChunk, ErrorKind> {
     let chunk = BmhdChunk {
         id: String::from("BMHD"),
-        width: chunk.get_u16(8 + 0)?,
-        height: chunk.get_u16(8 + 2)?,
-        x: chunk.get_i16(8 + 4)?,
-        y: chunk.get_i16(8 + 6)?,
-        number_of_planes: chunk.get_u8(8 + 8)?,
-        masking: chunk.get_u8(8 + 9)?,
-        compression: chunk.get_u8(8 + 10)?,
-        transparent_color_number: chunk.get_u16(8 + 12)?,
-        x_aspect: chunk.get_u8(8 + 14)?,
-        y_aspect: chunk.get_u8(8 + 15)?,
-        page_width: chunk.get_i16(8 + 16)?,
-        page_height: chunk.get_i16(8 + 18)?,
+        width: raw_chunk.get_u16(8 + 0)?,
+        height: raw_chunk.get_u16(8 + 2)?,
+        x: raw_chunk.get_i16(8 + 4)?,
+        y: raw_chunk.get_i16(8 + 6)?,
+        number_of_planes: raw_chunk.get_u8(8 + 8)?,
+        masking: raw_chunk.get_u8(8 + 9)?,
+        compression: raw_chunk.get_u8(8 + 10)?,
+        transparent_color_number: raw_chunk.get_u16(8 + 12)?,
+        x_aspect: raw_chunk.get_u8(8 + 14)?,
+        y_aspect: raw_chunk.get_u8(8 + 15)?,
+        page_width: raw_chunk.get_i16(8 + 16)?,
+        page_height: raw_chunk.get_i16(8 + 18)?,
     };
 
     Ok(chunk)
 }
 
-fn get_cmap_chunk(chunk: &RawChunk) -> Result<CmapChunk, ErrorKind> {
-    let no_colors = (chunk.size) / 3;
-    let chunk = CmapChunk {
+fn get_cmap_chunk(raw_chunk: &RawChunk) -> Result<CmapChunk, ErrorKind> {
+    let no_colors = (raw_chunk.size) / 3;
+    let mut chunk = CmapChunk {
         rgb: vec![ColRgbU8 { r: 0, g: 0, b: 0 }; no_colors],
     };
+
+    for i in 0..no_colors {
+        chunk.rgb[i].r = raw_chunk.get_u8(8 + i * 3 + 0)?;
+        chunk.rgb[i].g = raw_chunk.get_u8(8 + i * 3 + 1)?;
+        chunk.rgb[i].b = raw_chunk.get_u8(8 + i * 3 + 2)?;
+    }
 
     Ok(chunk)
 }
