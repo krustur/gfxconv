@@ -152,10 +152,22 @@ pub struct ColRgbU8 {
     b: u8,
 }
 
-#[derive(Debug)]
+// #[derive(Debug)]
 pub struct CmapChunk {
     // pub rgb: &'a [ColRgbU8],
     pub rgb: Vec<ColRgbU8>,
+}
+
+impl fmt::Debug for CmapChunk {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let cnt = cmp::min(4, self.rgb.len());
+
+        for i in 0..cnt {
+            let wr = write!(f, "{:?} ", self.rgb[i])?;
+        }
+        Ok(())
+        // write!(f, "0b{:08b}", self.0)
+    }
 }
 
 pub fn read_iff_file(file_path: path::PathBuf) -> Result<IffFile, ErrorKind> {
