@@ -95,6 +95,20 @@ fn correct_cmap() {
     assert_eq!(0xff, cmap.rgb[255].b, "cmap.rgb255.b");
 }
 
+#[test]
+fn correct_body() {
+    let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
+
+    let body = gfxconv::read_iff_file(test_path)
+        .unwrap()
+        .ilbm
+        .body
+        .unwrap();
+
+    assert_eq!(0x0000CB55, body.raw_buffer.len(), "body.raw_buffer.len");
+    assert_eq!(256, body.pixels.len(), "body.pixels.len");
+}
+
 mod test_util {
     use gfxconv::ErrorKind;
 

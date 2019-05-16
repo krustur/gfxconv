@@ -178,6 +178,7 @@ impl fmt::Debug for CmapChunk {
 
 pub struct BodyChunk {
     pub pixels: Vec<u8>,
+    pub raw_buffer: Vec<u8>,
 }
 
 pub fn read_iff_file(file_path: path::PathBuf) -> Result<IffFile, ErrorKind> {
@@ -418,7 +419,14 @@ fn get_cmap_chunk(raw_chunk: &RawChunk) -> Result<CmapChunk, ErrorKind> {
 }
 
 fn get_body_chunk(raw_chunk: &RawChunk) -> Result<BodyChunk, ErrorKind> {
-    let mut chunk = BodyChunk { pixels: vec![0; 0] };
+    let mut chunk = BodyChunk {
+        raw_buffer: vec![0; raw_chunk.size],
+        pixels: vec![0; 0],
+    };
+
+    &chunk
+        .raw_buffer
+        .clone_from_slice(raw_chunk.get_slice(8..raw_chunk.size + 8));
 
     Ok(chunk)
 }

@@ -5,6 +5,7 @@ use std::fs::File;
 use std::io;
 use std::io::prelude::*;
 use std::mem;
+use std::ops::Range;
 use std::path;
 use std::str;
 
@@ -76,8 +77,14 @@ impl<'a> RawChunk<'a> {
         let val = buffer_reader::get_u8(self.buffer, pos)?;
         Ok(val)
     }
+
     pub fn get_slice_to_end(&self, pos: usize) -> &'a [u8] {
         let slice = &self.buffer[pos..];
+        slice
+    }
+
+    pub fn get_slice(&self, range: Range<usize>) -> &'a [u8] {
+        let slice = &self.buffer[range];
         slice
     }
 }
