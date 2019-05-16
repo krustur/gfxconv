@@ -108,6 +108,7 @@ pub struct FormIlbmChunk {
     // pub children: Vec<Box<dyn Chunk>>,
     pub bmhd: Option<BmhdChunk>,
     pub cmap: Option<CmapChunk>,
+    pub body: Option<BodyChunk>,
 }
 
 impl FormIlbmChunk {
@@ -117,6 +118,7 @@ impl FormIlbmChunk {
             id: id,
             bmhd: None,
             cmap: None,
+            body: None,
         }
     }
 }
@@ -172,6 +174,10 @@ impl fmt::Debug for CmapChunk {
         }
         Ok(())
     }
+}
+
+pub struct BodyChunk {
+    pub pixels: Vec<u8>,
 }
 
 pub fn read_iff_file(file_path: path::PathBuf) -> Result<IffFile, ErrorKind> {
@@ -274,8 +280,6 @@ fn parse_ilbm_buffer(
                 let chunk = get_cmap_chunk(&chunk)?;
                 println!("Cmap: {:?}", chunk);
                 ilbm.cmap = Some(chunk);
-                // iff_chunks.push(Box::new(chunk));
-                // ilbm.Cmap = new Cmap(chunk, ilbm);
                 //
             }
             //
@@ -287,9 +291,10 @@ fn parse_ilbm_buffer(
             }
 
             "BODY" => {
-                let chunk = UnknownChunk::new(chunk.id.to_string());
-                // iff_chunks.push(Box::new(chunk));
-                // ilbm.Body = new Body(chunk, ilbm);
+                // let chunk = UnknownChunk::new(chunk.id.to_string());
+                let chunk = get_body_chunk(&chunk)?;
+                // println!("Cmap: {:?}", chunk);
+                ilbm.body = Some(chunk);
                 //
             }
 
@@ -386,6 +391,7 @@ fn get_bmhd_chunk(raw_chunk: &RawChunk) -> Result<BmhdChunk, ErrorKind> {
         number_of_planes: raw_chunk.get_u8(8 + 8)?,
         masking: raw_chunk.get_u8(8 + 9)?,
         compression: raw_chunk.get_u8(8 + 10)?,
+        // UBYTE pad1
         transparent_color_number: raw_chunk.get_u16(8 + 12)?,
         x_aspect: raw_chunk.get_u8(8 + 14)?,
         y_aspect: raw_chunk.get_u8(8 + 15)?,
@@ -407,6 +413,12 @@ fn get_cmap_chunk(raw_chunk: &RawChunk) -> Result<CmapChunk, ErrorKind> {
         chunk.rgb[i].g = raw_chunk.get_u8(8 + i * 3 + 1)?;
         chunk.rgb[i].b = raw_chunk.get_u8(8 + i * 3 + 2)?;
     }
+
+    Ok(chunk)
+}
+
+fn get_body_chunk(raw_chunk: &RawChunk) -> Result<BodyChunk, ErrorKind> {
+    let mut chunk = BodyChunk { pixels: vec![0; 0] };
 
     Ok(chunk)
 }
