@@ -106,7 +106,7 @@ fn correct_body() {
         .unwrap();
 
     assert_eq!(0x0000CB55, body.raw_buffer.len(), "body.raw_buffer.len");
-    assert_eq!(256, body.pixels.len(), "body.pixels.len");
+    assert_eq!(320 * 256, body.pixels.len(), "body.pixels.len");
 }
 
 mod test_util {

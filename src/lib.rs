@@ -30,6 +30,7 @@ pub enum ErrorKind {
     MultipleRootChunksFound,
     UnknownIlbmChunk(String),
     InvalidChunkSize,
+    BmhdNotYetSet,
 }
 
 impl std::cmp::PartialEq for ErrorKind {
@@ -79,6 +80,10 @@ impl std::cmp::PartialEq for ErrorKind {
             },
             ErrorKind::InvalidChunkSize => match other {
                 ErrorKind::InvalidChunkSize => true,
+                _ => false,
+            },
+            ErrorKind::BmhdNotYetSet => match other {
+                ErrorKind::BmhdNotYetSet => true,
                 _ => false,
             },
         }
@@ -293,7 +298,7 @@ fn parse_ilbm_buffer(
 
             "BODY" => {
                 // let chunk = UnknownChunk::new(chunk.id.to_string());
-                let chunk = get_body_chunk(&chunk)?;
+                let chunk = get_body_chunk(&chunk, &ilbm.bmhd)?;
                 // println!("Cmap: {:?}", chunk);
                 ilbm.body = Some(chunk);
                 //
@@ -418,10 +423,17 @@ fn get_cmap_chunk(raw_chunk: &RawChunk) -> Result<CmapChunk, ErrorKind> {
     Ok(chunk)
 }
 
-fn get_body_chunk(raw_chunk: &RawChunk) -> Result<BodyChunk, ErrorKind> {
+fn get_body_chunk(raw_chunk: &RawChunk, bmhd: &Option<BmhdChunk>) -> Result<BodyChunk, ErrorKind> {
+    let bmhd = match bmhd {
+        None => return Err(ErrorKind::BmhdNotYetSet),
+        Some(b) => b,
+    };
+
+    let no_pixels = bmhd.width as usize * bmhd.height as usize;
+
     let mut chunk = BodyChunk {
         raw_buffer: vec![0; raw_chunk.size],
-        pixels: vec![0; 0],
+        pixels: vec![0; no_pixels],
     };
 
     &chunk
