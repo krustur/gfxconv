@@ -78,6 +78,11 @@ impl<'a> RawChunk<'a> {
         Ok(val)
     }
 
+    pub fn get_i8(&self, pos: usize) -> Result<i8, ErrorKind> {
+        let val = buffer_reader::get_i8(self.buffer, pos)?;
+        Ok(val)
+    }
+
     pub fn get_slice_to_end(&self, pos: usize) -> &'a [u8] {
         let slice = &self.buffer[pos..];
         slice

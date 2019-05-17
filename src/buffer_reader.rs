@@ -60,13 +60,14 @@ pub fn get_i16(buffer: &[u8], pos: usize) -> Result<i16, ErrorKind> {
 }
 
 pub fn get_u8(buffer: &[u8], pos: usize) -> Result<u8, ErrorKind> {
-    // let slize = &buffer[pos..pos + 2];
-    // let mut array: [u8; 2] = [0; 2];
-    // array.copy_from_slice(slize);
-    // let value = unsafe { mem::transmute::<[u8; 2], get_u8>(array).to_be() };
-    // let value = value as get_u8;
-
     let value = buffer[pos];
     Ok(value)
 }
-// }
+
+pub fn get_i8(buffer: &[u8], pos: usize) -> Result<i8, ErrorKind> {
+    let slize = &buffer[pos..pos + 1];
+    let mut array: [u8; 1] = [0; 1];
+    array.copy_from_slice(slize);
+    let value = unsafe { mem::transmute::<[u8; 1], i8>(array).to_be() };//buffer[pos];
+    Ok(value)
+}
