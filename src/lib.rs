@@ -31,6 +31,7 @@ pub enum ErrorKind {
     UnknownIlbmChunk(String),
     InvalidChunkSize,
     BmhdNotYetSet,
+    IlbmNoOp,
 }
 
 impl std::cmp::PartialEq for ErrorKind {
@@ -86,6 +87,10 @@ impl std::cmp::PartialEq for ErrorKind {
                 ErrorKind::BmhdNotYetSet => true,
                 _ => false,
             },
+            ErrorKind::IlbmNoOp => match other {
+                ErrorKind::IlbmNoOp => true,
+                _ => false,
+            },
         }
     }
 }
@@ -102,7 +107,7 @@ pub struct UnknownChunk {
 
 impl UnknownChunk {
     pub fn new(id: String) -> UnknownChunk {
-        UnknownChunk { id: id }
+        UnknownChunk { id }
     }
 }
 
@@ -120,7 +125,7 @@ impl FormIlbmChunk {
     pub fn new(id: String) -> FormIlbmChunk {
         FormIlbmChunk {
             // children: Vec::new(),
-            id: id,
+            id,
             bmhd: None,
             cmap: None,
             body: None,
@@ -439,7 +444,6 @@ fn get_body_chunk(raw_chunk: &RawChunk, bmhd: &Option<BmhdChunk>) -> Result<Body
     let bytes_per_row_per_plane = ((bmhd.width as usize + 15) & 0xfffffff0) / 8;
     let bytes_per_row_all_planes = bytes_per_row_per_plane * actual_number_of_planes;
     let interleaved_size = bytes_per_row_all_planes * bmhd.height as usize;
-    // InterleavedBitmapData = new byte[targetSize];
 
     let mut chunk = BodyChunk {
         raw_buffer: vec![0; raw_chunk.size],
@@ -450,6 +454,35 @@ fn get_body_chunk(raw_chunk: &RawChunk, bmhd: &Option<BmhdChunk>) -> Result<Body
     &chunk
         .raw_buffer
         .clone_from_slice(raw_chunk.get_slice(8..raw_chunk.size + 8));
+
+    let mut pos   : usize = 0;
+    let mut target_pos  : usize = 0;
+    let mut written_bytes : usize = 0;
+    while pos < raw_chunk.size {
+        let n = raw_chunk.get_i8(pos)?;
+        pos += 1;
+        if n == -128
+        {
+            return Err(ErrorKind::IlbmNoOp);
+        }
+        else if n < 0{
+            let new_n = -n;
+            for i in 0..new_n + 1 {
+                chunk.interleaved_bitmap_data[target_pos] = raw_chunk.get_u8(pos)?;
+                target_pos += 1;
+            }
+            written_bytes += new_n as usize + 1;
+            pos += 1;
+        }
+        else{
+            for i in 0..n+1 {
+                chunk.interleaved_bitmap_data[target_pos] = raw_chunk.get_u8(pos)?;
+                target_pos += 1;
+                pos += 1;
+            }
+            written_bytes += n as usize + 1;
+        }
+    }
 
     Ok(chunk)
 }
