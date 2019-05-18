@@ -8,13 +8,14 @@ use std::path;
 use std::str;
 
 // impl BufferReader{
-pub fn get_str(buffer: &[u8], pos: usize) -> Result<&str, ErrorKind> {
-    let chunk_id = str::from_utf8(&buffer[pos..pos + 4]);
-    let chunk_id2 = match chunk_id {
+pub fn get_chunk_id(buffer: &[u8], pos: usize) -> Result<&str, ErrorKind> {
+    let chunk_id = get_string(&buffer[pos..pos + 4]);
+
+    let chunk_id = match chunk_id {
         Ok(x) => x,
         Err(err) => {
             let err_msg = fmt::format(format_args!(
-                "{}: [{:X}] [{:X}] [{:X}] [{:X}]",
+                "{:?}: [{:X}] [{:X}] [{:X}] [{:X}]",
                 err,
                 buffer[pos + 0],
                 buffer[pos + 1],
@@ -24,9 +25,21 @@ pub fn get_str(buffer: &[u8], pos: usize) -> Result<&str, ErrorKind> {
             return Err(ErrorKind::UnknownChunk(err_msg));
         }
     };
-    // println!("group_id {:?}", chunk_id);
 
-    Ok(chunk_id2)
+    Ok(chunk_id)
+}
+
+pub fn get_string(buffer: &[u8]) -> Result<&str, ErrorKind> {
+    let chunk_id = str::from_utf8(&buffer);
+
+    let chunk_id = match chunk_id {
+        Ok(x) => x,
+        Err(err) => {
+            return Err(ErrorKind::UnparseableString(err));
+        }
+    };
+
+    Ok(chunk_id)
 }
 
 pub fn get_u32(buffer: &[u8], pos: usize) -> Result<u32, ErrorKind> {

@@ -15,9 +15,7 @@ impl<'a> RawChunkArray<'a> {
     }
 }
 
-// impl<'a> Iterator for RawChunkArray<'a> {
 impl<'a> RawChunkArray<'a> {
-    // type Item = RawChunk<'a>;
 
     pub fn get_first(&mut self) -> Result<Option<RawChunk<'a>>, ErrorKind> {
         self.pos = 0;
@@ -31,12 +29,7 @@ impl<'a> RawChunkArray<'a> {
         }
 
         let raw_chunk = RawChunk::from(self.buffer, self.pos)?;
-        //  {
-        //     Ok(chunk) => chunk,
-        //     Err(_) => return Ok(None), // TODO: This is a problem! How to Handle Errors?
-        // };
 
-        // println!("pos: {:?}", self.pos);
         self.pos += 8;
         self.pos += ((raw_chunk.size as usize) + 1) & 0xfffffffffffffffe;
 

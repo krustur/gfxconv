@@ -15,6 +15,7 @@ use std::io;
 use std::io::prelude::*;
 use std::path;
 use std::str;
+use std::str::Utf8Error;
 
 #[derive(Debug)]
 // #[derive(PartialEq)]
@@ -32,6 +33,8 @@ pub enum ErrorKind {
     InvalidChunkSize,
     BmhdNotYetSet,
     IlbmNoOp,
+    UnparseableString(Utf8Error),
+    ChunkLengthMismatch,
 }
 
 impl std::cmp::PartialEq for ErrorKind {
@@ -42,7 +45,7 @@ impl std::cmp::PartialEq for ErrorKind {
                     ErrorKind::IoError(o) => false, //TODO: Compare io errors
                     _ => false,
                 }
-            }
+            },
             ErrorKind::UnknownChunk(s) => match other {
                 ErrorKind::UnknownChunk(o) => s == o,
                 _ => false,
@@ -89,6 +92,16 @@ impl std::cmp::PartialEq for ErrorKind {
             },
             ErrorKind::IlbmNoOp => match other {
                 ErrorKind::IlbmNoOp => true,
+                _ => false,
+            },
+            ErrorKind::UnparseableString(s) => {
+                match other {
+                    ErrorKind::UnparseableString(o) => false, //TODO: Compare utf errors
+                    _ => false,
+                }
+            },
+            ErrorKind::ChunkLengthMismatch => match other {
+                ErrorKind::ChunkLengthMismatch => true,
                 _ => false,
             },
         }
@@ -276,7 +289,13 @@ fn parse_ilbm_buffer(
 
         match chunk.id {
             "ANNO" => {
-                let chunk = UnknownChunk::new(chunk.id.to_string());
+//                let chunk = UnknownChunk::new(chunk.id.to_string());
+//                let an = "jek";
+                let bytes = chunk.get_slice(8..8 + chunk.size);
+                println!("bytes: {:?}", bytes);
+                let anno = buffer_reader::get_string(bytes)?;
+
+                println!("Anno: {}", anno);
                 // iff_chunks.push(Box::new(chunk));
                 // ilbm.Anno = Encoding.UTF8.GetString(chunk.Content, 0, (int)chunk.ContentLength);
                 //

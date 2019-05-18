@@ -34,26 +34,25 @@ impl<'a> RawChunk<'a> {
             return Err(ErrorKind::ChunkTooShort);
         };
 
-        let id = buffer_reader::get_str(buffer, pos + 0)?;
+        let id = buffer_reader::get_chunk_id(buffer, pos + 0)?;
         let size = buffer_reader::get_u32(buffer, pos + 4)? as usize;
         if size == 0 {
             return Err(ErrorKind::ZeroSizeChunk);
         }
 
-        // if size != buffer.len() - 8 {
-        //     println!("Invalid chunk size: {:?} - {:?}", size, buffer.len() - 8);
-        //     return Err(ErrorKind::InvalidChunkSize);
-        // }
-
+        let end_pos = 8+pos+size;
+if end_pos > buffer.len() {
+    return Err(ErrorKind::ChunkLengthMismatch);
+}
         Ok(RawChunk {
             id: id,
             size: size,
-            buffer: &buffer[pos..],
+            buffer: &buffer[pos..end_pos],
         })
     }
 
     pub fn get_str(&self, pos: usize) -> Result<&'a str, ErrorKind> {
-        let val = buffer_reader::get_str(self.buffer, pos)?;
+        let val = buffer_reader::get_chunk_id(self.buffer, pos)?;
         Ok(val)
     }
     // println!("group_id {:?}", chunk_id);
