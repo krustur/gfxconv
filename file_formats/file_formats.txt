@@ -1,0 +1,40 @@
+Types
+=====
+ILBM=Interleaved bitmap
+CHUN=Chunky pixels
+CMAP=Color Map
+COPP=Copper
+COPC=Copper (only color)
+SPRI=Sprite
+
+
+ILBM
+====
+494C424D 01400100 08------ --------
+^        ^   ^    ^
+|        |   |    `- number of bitmaps (byte)
+|        |   `- heigth in pixels (word)
+|        `- width in pixels (word)
+`- ILBM Identifier
+
+CHUN
+====
+4348554E 01400100 08------ --------
+^        ^   ^    ^
+|        |   |    `- bits per pixel (byte)
+|        |   `- heigth in pixels (word)
+|        `- width in pixels (word)
+`- CHUN Identifier
+
+CMAP
+====
+434D4150 08------
+^        ^
+|        |
+|        |
+|        `- bits per pixel (byte)
+`- CMAP Identifier
+
+COPP=Copper
+COPC=Copper (only color)
+SPRI=Sprite
