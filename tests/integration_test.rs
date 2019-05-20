@@ -1,32 +1,35 @@
 use gfxconv;
-use gfxconv::ErrorKind;
+use gfxconv::error::ErrorKind;
+use gfxconv::iff::IffFile;
+
+mod test_util;
 
 // fn correct_number_of_bitplanes() {
 #[test]
 fn short_file() {
     let test_path = test_util::get_tests_path().join("short_file.iff");
-    let res = gfxconv::read_iff_file(test_path);
+    let res = IffFile::read_iff_file(test_path);
     test_util::assert_error(ErrorKind::FileTooShort, res);
 }
 
 #[test]
 fn not_form_type() {
     let test_path = test_util::get_tests_path().join("not_form.iff");
-    let res = gfxconv::read_iff_file(test_path);
+    let res = IffFile::read_iff_file(test_path);
     test_util::assert_error(ErrorKind::UnknownChunk(String::from("FORN")), res);
 }
 
 #[test]
 fn unknown_form_type() {
     let test_path = test_util::get_tests_path().join("unknown_form_type.iff");
-    let res = gfxconv::read_iff_file(test_path);
+    let res = IffFile::read_iff_file(test_path);
     test_util::assert_error(ErrorKind::UnknownFormType, res);
 }
 
 #[test]
 fn zero_size_chunk() {
     let test_path = test_util::get_tests_path().join("zero_size_chunk.iff");
-    let res = gfxconv::read_iff_file(test_path);
+    let res = IffFile::read_iff_file(test_path);
     test_util::assert_error(ErrorKind::ZeroSizeChunk, res);
 }
 
@@ -34,7 +37,7 @@ fn zero_size_chunk() {
 fn correct_root_chunk_id() {
     let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
 
-    let ilbm = gfxconv::read_iff_file(test_path).unwrap().ilbm;
+    let ilbm = IffFile::read_iff_file(test_path).unwrap().ilbm;
     assert_eq!("FORM", ilbm.id);
 }
 
@@ -42,7 +45,7 @@ fn correct_root_chunk_id() {
 fn correct_bmhd() {
     let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
 
-    let bmhd = gfxconv::read_iff_file(test_path)
+    let bmhd = IffFile::read_iff_file(test_path)
         .unwrap()
         .ilbm
         .bmhd
@@ -69,7 +72,7 @@ fn correct_bmhd() {
 fn correct_cmap() {
     let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
 
-    let cmap = gfxconv::read_iff_file(test_path)
+    let cmap = IffFile::read_iff_file(test_path)
         .unwrap()
         .ilbm
         .cmap
@@ -99,7 +102,7 @@ fn correct_cmap() {
 fn correct_body() {
     let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
 
-    let body = gfxconv::read_iff_file(test_path)
+    let body = IffFile::read_iff_file(test_path)
         .unwrap()
         .ilbm
         .body
@@ -114,27 +117,3 @@ fn correct_body() {
     );
 }
 
-mod test_util {
-    use gfxconv::ErrorKind;
-
-    pub fn get_tests_path() -> std::path::PathBuf {
-        let exe_path = std::env::current_exe().unwrap();
-        let test_path = exe_path
-            .parent()
-            .unwrap()
-            .parent()
-            .unwrap()
-            .parent()
-            .unwrap()
-            .parent()
-            .unwrap()
-            .join("tests");
-        // let test_path_str = test_path.to_str().unwrap();
-        return test_path;
-    }
-
-    pub fn assert_error<T>(expected: ErrorKind, result: Result<T, ErrorKind>) {
-        let actual = result.err().unwrap();
-        assert_eq!(expected, actual);
-    }
-}

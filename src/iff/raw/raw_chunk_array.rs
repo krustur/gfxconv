@@ -1,5 +1,5 @@
-use crate::raw_chunk::*;
-use crate::ErrorKind;
+use crate::iff::raw::raw_chunk::RawChunk;
+use crate::error::ErrorKind;
 
 pub struct RawChunkArray<'a> {
     buffer: &'a [u8],

@@ -1,13 +1,7 @@
-use crate::buffer_reader;
-use crate::ErrorKind;
-use std::fmt;
-use std::fs::File;
-use std::io;
-use std::io::prelude::*;
-use std::mem;
+use crate::error::ErrorKind;
 use std::ops::Range;
-use std::path;
-use std::str;
+use std::fmt;
+use crate::common::buffer_reader;
 
 // #[derive(Debug)]
 pub struct RawChunk<'a> {
@@ -41,9 +35,9 @@ impl<'a> RawChunk<'a> {
         }
 
         let end_pos = 8+pos+size;
-if end_pos > buffer.len() {
-    return Err(ErrorKind::ChunkLengthMismatch);
-}
+        if end_pos > buffer.len() {
+            return Err(ErrorKind::ChunkLengthMismatch);
+        }
         Ok(RawChunk {
             id: id,
             size: size,

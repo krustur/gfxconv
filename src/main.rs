@@ -1,6 +1,14 @@
-#[allow(unused_imports)]
+//#[allow(unused_imports)]
+//mod raw;
 
-use clap::{App, Arg, SubCommand};
+pub mod error;
+pub mod common;
+pub mod iff;
+pub mod raw;
+
+use clap::{App, Arg};
+//use crate::raw;
+//use crate::buffer_reader;
 
 fn main() {
     let matches = App::new("GfxConv")
@@ -42,7 +50,7 @@ fn main() {
     println!("INPUT: {}", input);
     let output_path = matches.value_of("output-path");
     match output_path {
-        Some(o) => println!("output_path: {}", output_path.unwrap()),
+        Some(_o) => println!("output_path: {}", output_path.unwrap()),
         None => (),
     }
 
@@ -68,12 +76,15 @@ fn main() {
 
     // more program logic goes here...
 
-    let result = gfxconv::read_iff_file(std::path::PathBuf::from(input));
+    let input_path = std::path::PathBuf::from(input);
+    let result = iff::IffFile::read_iff_file(input_path);
 
     match result {
-        Ok(res) => println!("Ok: {:?}", res),
-        Err(err) => eprintln!("Error: {:?}", err),
+        Ok(_res) => (),
+        Err(err) => eprintln!("Error while reading input file: {:?}", err),
     }
+
+//    raw::write_file();
 
 
     // println!("result: {}", result);

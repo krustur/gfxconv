@@ -1,10 +1,6 @@
-use crate::ErrorKind;
+use crate::error::ErrorKind;
 use std::fmt;
-use std::fs::File;
-use std::io;
-use std::io::prelude::*;
 use std::mem;
-use std::path;
 use std::str;
 
 // impl BufferReader{
