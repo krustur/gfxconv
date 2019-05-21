@@ -90,7 +90,7 @@ fn main() {
         },
     };
 
-    let iff_file = IffFile::parse_iff_buffer(&buffer);
+    let iff_file = IffFile::from_iff_buffer(&buffer);
 
     match iff_file {
         Ok(_res) => (),

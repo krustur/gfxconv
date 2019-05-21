@@ -12,7 +12,7 @@ pub struct IffFile {
 impl IffFile {
 
 
-    pub fn parse_iff_buffer(buffer: &[u8]) -> Result<IffFile, ErrorKind> {
+    pub fn from_iff_buffer(buffer: &[u8]) -> Result<IffFile, ErrorKind> {
         if buffer.len() < 12 {
             return Err(ErrorKind::FileTooShort);
         }

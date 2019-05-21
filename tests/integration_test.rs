@@ -11,7 +11,7 @@ fn read_iff_file(file: &str) -> Result<IffFile, ErrorKind> {
 
     let buffer = file_reader::read_file(test_path).unwrap();
 
-    let iff_file = IffFile::parse_iff_buffer(&buffer);
+    let iff_file = IffFile::from_iff_buffer(&buffer);
     iff_file
 
 }
