@@ -1,7 +1,8 @@
-use std::{fmt, cmp};
-use crate::iff::raw::raw_chunk::RawChunk;
-use crate::error::ErrorKind;
+use std::{cmp, fmt};
+
 use crate::common::col_rgb_u8::ColRgbU8;
+use crate::error::ErrorKind;
+use crate::iff::raw::raw_chunk::RawChunk;
 
 // #[derive(Debug)]
 pub struct CmapChunk {
@@ -19,7 +20,7 @@ impl fmt::Debug for CmapChunk {
     }
 }
 
-impl CmapChunk{
+impl CmapChunk {
     pub fn get_cmap_chunk(raw_chunk: &RawChunk) -> Result<CmapChunk, ErrorKind> {
         let no_colors = (raw_chunk.size) / 3;
         let mut chunk = CmapChunk {

@@ -1,12 +1,13 @@
 //#[allow(unused_imports)]
 //mod raw;
 
+use clap::{App, Arg};
+
 pub mod error;
 pub mod common;
 pub mod iff;
 pub mod raw;
 
-use clap::{App, Arg};
 //use crate::raw;
 //use crate::buffer_reader;
 

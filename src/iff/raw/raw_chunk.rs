@@ -1,7 +1,8 @@
-use crate::error::ErrorKind;
-use std::ops::Range;
 use std::fmt;
+use std::ops::Range;
+
 use crate::common::buffer_reader;
+use crate::error::ErrorKind;
 
 // #[derive(Debug)]
 pub struct RawChunk<'a> {
@@ -34,7 +35,7 @@ impl<'a> RawChunk<'a> {
             return Err(ErrorKind::ZeroSizeChunk);
         }
 
-        let end_pos = 8+pos+size;
+        let end_pos = 8 + pos + size;
         if end_pos > buffer.len() {
             return Err(ErrorKind::ChunkLengthMismatch);
         }

@@ -1,10 +1,12 @@
-pub mod chunks;
-pub mod raw;
-use crate::error::ErrorKind;
-use std::path;
 use std::fs::File;
 use std::io::Read;
+use std::path;
+
+use crate::error::ErrorKind;
 use crate::iff::chunks::form_ilbm_chunk::FormIlbmChunk;
+
+pub mod chunks;
+pub mod raw;
 
 #[derive(Debug)]
 pub struct IffFile {

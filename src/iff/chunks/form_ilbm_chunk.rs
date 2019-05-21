@@ -1,11 +1,12 @@
-use crate::iff::chunks::unknown_chunk::UnknownChunk;
-use crate::error::ErrorKind;
 use std::fmt;
-use crate::iff::raw::raw_chunk_array::RawChunkArray;
-use crate::iff::chunks::bmhd_chunk::BmhdChunk;
-use crate::iff::chunks::cmap_chunk::CmapChunk;
-use crate::iff::chunks::body_chunk::BodyChunk;
+
 use crate::common::buffer_reader;
+use crate::error::ErrorKind;
+use crate::iff::chunks::bmhd_chunk::BmhdChunk;
+use crate::iff::chunks::body_chunk::BodyChunk;
+use crate::iff::chunks::cmap_chunk::CmapChunk;
+use crate::iff::chunks::unknown_chunk::UnknownChunk;
+use crate::iff::raw::raw_chunk_array::RawChunkArray;
 
 // FormIlbmChunk
 // #[derive(Debug)]
@@ -56,7 +57,6 @@ impl FormIlbmChunk {
                         let mut form_raw_chunk_array = RawChunkArray::from(form_buffer);
 
                         FormIlbmChunk::parse_ilbm_buffer(&mut form_raw_chunk_array, &mut iff_form_chunk)?;
-
                     }
                     // TODO: Move to separate method, decide for anim or ilbm earlier
                     "ANIM" => {

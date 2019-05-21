@@ -1,5 +1,5 @@
-use crate::iff::raw::raw_chunk::RawChunk;
 use crate::error::ErrorKind;
+use crate::iff::raw::raw_chunk::RawChunk;
 
 // BmhdChunk
 #[derive(Debug)]
@@ -19,7 +19,7 @@ pub struct BmhdChunk {
     pub page_height: i16,
 }
 
-impl BmhdChunk{
+impl BmhdChunk {
     pub fn get_bmhd_chunk(raw_chunk: &RawChunk) -> Result<BmhdChunk, ErrorKind> {
         let chunk = BmhdChunk {
             id: String::from("BMHD"),

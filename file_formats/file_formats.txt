@@ -7,6 +7,9 @@ COPP=Copper
 COPC=Copper (only color)
 SPRI=Sprite
 
+Compression
+===========
+00=No compression
 
 ILBM
 ====

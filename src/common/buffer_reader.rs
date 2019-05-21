@@ -1,7 +1,8 @@
-use crate::error::ErrorKind;
 use std::fmt;
 use std::mem;
 use std::str;
+
+use crate::error::ErrorKind;
 
 // impl BufferReader{
 pub fn get_chunk_id(buffer: &[u8], pos: usize) -> Result<&str, ErrorKind> {

@@ -29,7 +29,7 @@ impl std::cmp::PartialEq for ErrorKind {
                     ErrorKind::IoError(_o) => false, //TODO: Compare io errors
                     _ => false,
                 }
-            },
+            }
             ErrorKind::UnknownChunk(s) => match other {
                 ErrorKind::UnknownChunk(o) => s == o,
                 _ => false,
@@ -83,7 +83,7 @@ impl std::cmp::PartialEq for ErrorKind {
                     ErrorKind::UnparseableString(_o) => false, //TODO: Compare utf errors
                     _ => false,
                 }
-            },
+            }
             ErrorKind::ChunkLengthMismatch => match other {
                 ErrorKind::ChunkLengthMismatch => true,
                 _ => false,

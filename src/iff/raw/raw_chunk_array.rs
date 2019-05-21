@@ -1,5 +1,5 @@
-use crate::iff::raw::raw_chunk::RawChunk;
 use crate::error::ErrorKind;
+use crate::iff::raw::raw_chunk::RawChunk;
 
 pub struct RawChunkArray<'a> {
     buffer: &'a [u8],
@@ -16,7 +16,6 @@ impl<'a> RawChunkArray<'a> {
 }
 
 impl<'a> RawChunkArray<'a> {
-
     pub fn get_first(&mut self) -> Result<Option<RawChunk<'a>>, ErrorKind> {
         self.pos = 0;
         let raw_chunk_result = self.get_next();
