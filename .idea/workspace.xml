@@ -12,7 +12,9 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79002242-f9f1-492d-8cba-84d7ddae4c40" name="Default Changelist" comment="" />
+    <list default="true" id="79002242-f9f1-492d-8cba-84d7ddae4c40" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/iff/chunks/form_ilbm_chunk.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff/chunks/form_ilbm_chunk.rs" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,10 +86,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/iff/chunks/form_ilbm_chunk.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="87" column="35" selection-start-line="87" selection-start-column="35" selection-end-line="87" selection-end-column="35" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/iff.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="14" column="15" selection-start-line="14" selection-start-column="15" selection-end-line="14" selection-end-column="15" />
+            <state relative-caret-position="119">
+              <caret line="7" column="20" lean-forward="true" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -115,15 +126,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="340">
               <caret line="20" column="15" lean-forward="true" selection-start-line="20" selection-start-column="15" selection-end-line="20" selection-end-column="15" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib.rs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
             </state>
           </provider>
         </entry>
@@ -159,6 +161,7 @@
       <find>IffFile</find>
       <find>wr</find>
       <find>let chunk = UnknownChunk::new</find>
+      <find>tjoho</find>
     </findStrings>
     <replaceStrings>
       <replace>let _chunk = UnknownChunk::new</replace>
@@ -199,7 +202,6 @@
         <option value="$PROJECT_DIR$/src/iff/chunks/body_chunk.rs" />
         <option value="$PROJECT_DIR$/src/iff/chunks/bmhd_chunk.rs" />
         <option value="$PROJECT_DIR$/src/iff/chunks/cmap_chunk.rs" />
-        <option value="$PROJECT_DIR$/src/iff/chunks/form_ilbm_chunk.rs" />
         <option value="$PROJECT_DIR$/src/iff/raw/raw_chunk_array.rs" />
         <option value="$PROJECT_DIR$/src/iff/raw/raw_chunk.rs" />
         <option value="$PROJECT_DIR$/file_formats.txt" />
@@ -212,6 +214,7 @@
         <option value="$PROJECT_DIR$/src/main.rs" />
         <option value="$PROJECT_DIR$/tests/integration_test.rs" />
         <option value="$PROJECT_DIR$/src/iff.rs" />
+        <option value="$PROJECT_DIR$/src/iff/chunks/form_ilbm_chunk.rs" />
       </list>
     </option>
   </component>
@@ -392,14 +395,11 @@
       <workItem from="1558273902725" duration="4244000" />
       <workItem from="1558298602332" duration="2619000" />
       <workItem from="1558331248965" duration="8306000" />
-      <workItem from="1558467050650" duration="3157000" />
+      <workItem from="1558467050650" duration="3796000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Test - 2019.05.18 at 20h 14m 35s.xml">
-      <configuration name="Test" configurationId="CargoCommandRunConfiguration" />
-    </history-entry>
     <history-entry file="Test - 2019.05.19 at 15h 54m 24s.xml">
       <configuration name="Test" configurationId="CargoCommandRunConfiguration" />
     </history-entry>
@@ -427,9 +427,12 @@
     <history-entry file="Test - 2019.05.21 at 22h 27m 49s.xml">
       <configuration name="Test" configurationId="CargoCommandRunConfiguration" />
     </history-entry>
+    <history-entry file="Test - 2019.05.21 at 22h 29m 14s.xml">
+      <configuration name="Test" configurationId="CargoCommandRunConfiguration" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39211000" />
+    <option name="totallyTimeSpent" value="39850000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -535,13 +538,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="4" selection-start-column="4" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/iff/chunks/form_ilbm_chunk.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="10" column="16" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
         </state>
       </provider>
     </entry>
@@ -668,8 +664,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/iff.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="15" selection-start-line="14" selection-start-column="15" selection-end-line="14" selection-end-column="15" />
+        <state relative-caret-position="119">
+          <caret line="7" column="20" lean-forward="true" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/iff/chunks/form_ilbm_chunk.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="87" column="35" selection-start-line="87" selection-start-column="35" selection-end-line="87" selection-end-column="35" />
         </state>
       </provider>
     </entry>

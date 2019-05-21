@@ -78,14 +78,11 @@ impl FormIlbmChunk {
     ) -> Result<(), ErrorKind> {
         let mut raw_chunk = raw_chunk_array.get_first()?;
         while let Some(chunk) = raw_chunk {
-            println!("tjoho {:?} {:?}", chunk.id, chunk.size);
-
             match chunk.id {
                 "ANNO" => {
 //                let _chunk = UnknownChunk::new(chunk.id.to_string());
 //                let an = "jek";
                     let bytes = chunk.get_slice(8..8 + chunk.size);
-                    println!("bytes: {:?}", bytes);
                     let anno = buffer_reader::get_string(bytes)?;
 
                     println!("Anno: {}", anno);
