@@ -2,9 +2,13 @@
 //mod raw;
 
 use clap::{App, Arg};
+use crate::io::file_reader;
+use crate::iff::IffFile;
+use std::process;
 
 pub mod error;
 pub mod common;
+pub mod io;
 pub mod iff;
 pub mod raw;
 
@@ -78,11 +82,22 @@ fn main() {
     // more program logic goes here...
 
     let input_path = std::path::PathBuf::from(input);
-    let result = iff::IffFile::read_iff_file(input_path);
+    let buffer = match file_reader::read_file(input_path){
+        Ok(b) => {b},
+        Err(err) => {
+            eprintln!("Error while reading input file: {:?}", err);
+            process::exit(1);
+        },
+    };
 
-    match result {
+    let iff_file = IffFile::parse_iff_buffer(&buffer);
+
+    match iff_file {
         Ok(_res) => (),
-        Err(err) => eprintln!("Error while reading input file: {:?}", err),
+        Err(err) => {
+            eprintln!("Error while parsing iff buffer: {:?}", err);
+            process::exit(1);
+        }
     }
 
 //    raw::write_file();

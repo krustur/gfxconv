@@ -1,10 +1,10 @@
-use std::io;
+//use std::io;
 use std::str::Utf8Error;
 
 #[derive(Debug)]
 // #[derive(PartialEq)]
 pub enum ErrorKind {
-    IoError(io::Error),
+//    IoError(Error),
     FileTooShort,
     UnknownChunk(String),
     ChunkTooShort,
@@ -24,12 +24,12 @@ pub enum ErrorKind {
 impl std::cmp::PartialEq for ErrorKind {
     fn eq(&self, other: &ErrorKind) -> bool {
         match self {
-            ErrorKind::IoError(_s) => {
-                match other {
-                    ErrorKind::IoError(_o) => false, //TODO: Compare io errors
-                    _ => false,
-                }
-            }
+//            ErrorKind::IoError(_s) => {
+//                match other {
+//                    ErrorKind::IoError(_o) => false, //TODO: Compare io errors
+//                    _ => false,
+//                }
+//            }
             ErrorKind::UnknownChunk(s) => match other {
                 ErrorKind::UnknownChunk(o) => s == o,
                 _ => false,

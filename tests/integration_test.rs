@@ -1,51 +1,53 @@
 use gfxconv;
 use gfxconv::error::ErrorKind;
 use gfxconv::iff::IffFile;
+use gfxconv::io::file_reader;
 
 mod test_util;
 
 // fn correct_number_of_bitplanes() {
+fn read_iff_file(file: &str) -> Result<IffFile, ErrorKind> {
+    let test_path = test_util::get_tests_path().join(file);
+
+    let buffer = file_reader::read_file(test_path).unwrap();
+
+    let iff_file = IffFile::parse_iff_buffer(&buffer);
+    iff_file
+
+}
 #[test]
 fn short_file() {
-    let test_path = test_util::get_tests_path().join("short_file.iff");
-    let res = IffFile::read_iff_file(test_path);
+    let res = read_iff_file("short_file.iff");
     test_util::assert_error(ErrorKind::FileTooShort, res);
 }
 
 #[test]
 fn not_form_type() {
-    let test_path = test_util::get_tests_path().join("not_form.iff");
-    let res = IffFile::read_iff_file(test_path);
+    let res = read_iff_file("not_form.iff");
     test_util::assert_error(ErrorKind::UnknownChunk(String::from("FORN")), res);
 }
 
 #[test]
 fn unknown_form_type() {
-    let test_path = test_util::get_tests_path().join("unknown_form_type.iff");
-    let res = IffFile::read_iff_file(test_path);
+    let res = read_iff_file("unknown_form_type.iff");
     test_util::assert_error(ErrorKind::UnknownFormType, res);
 }
 
 #[test]
 fn zero_size_chunk() {
-    let test_path = test_util::get_tests_path().join("zero_size_chunk.iff");
-    let res = IffFile::read_iff_file(test_path);
+    let res = read_iff_file("zero_size_chunk.iff");
     test_util::assert_error(ErrorKind::ZeroSizeChunk, res);
 }
 
 #[test]
 fn correct_root_chunk_id() {
-    let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
-
-    let ilbm = IffFile::read_iff_file(test_path).unwrap().ilbm;
+    let ilbm = read_iff_file("test01_320_256_256.iff").unwrap().ilbm;
     assert_eq!("FORM", ilbm.id);
 }
 
 #[test]
 fn correct_bmhd() {
-    let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
-
-    let bmhd = IffFile::read_iff_file(test_path)
+    let bmhd = read_iff_file("test01_320_256_256.iff")
         .unwrap()
         .ilbm
         .bmhd
@@ -70,9 +72,7 @@ fn correct_bmhd() {
 
 #[test]
 fn correct_cmap() {
-    let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
-
-    let cmap = IffFile::read_iff_file(test_path)
+    let cmap = read_iff_file("test01_320_256_256.iff")
         .unwrap()
         .ilbm
         .cmap
@@ -100,9 +100,7 @@ fn correct_cmap() {
 
 #[test]
 fn correct_body() {
-    let test_path = test_util::get_tests_path().join("test01_320_256_256.iff");
-
-    let body = IffFile::read_iff_file(test_path)
+    let body = read_iff_file("test01_320_256_256.iff")
         .unwrap()
         .ilbm
         .body
