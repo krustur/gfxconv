@@ -6,10 +6,15 @@ use std::ffi::{OsString};
 pub struct Config {
     pub input_file_path: PathBuf,
     pub output_folder_path: PathBuf,
-    pub output_file_name: Box<OsString>,
+    pub output_file_stem: Box<OsString>,
 }
 
 impl Config {
+    pub fn get_output_file_name(self, ext: &str) -> PathBuf {
+        let file = self.output_file_stem.to_os_string();
+        self.output_folder_path.join(file).with_extension(ext)
+    }
+
     pub fn from(args: Vec<String>) -> Config {
         let matches = App::new("GfxConv")
             .version(env!("CARGO_PKG_VERSION"))
@@ -89,21 +94,47 @@ impl Config {
         Config {
             input_file_path,
             output_folder_path,
-            output_file_name: Box::new(output_file_stem)
+            output_file_stem: Box::new(output_file_stem)
         }
     }
 }
 
 #[cfg(test)]
-mod tests {
+mod config_tests {
     use crate::config::Config;
 
     #[test]
-    fn single_file_name() {
+    fn from_single_file_name() {
         let config = Config::from(vec![String::from("exe"), String::from("bild.iff")]);
 
         assert_eq!("bild.iff", config.input_file_path.to_str().unwrap());
         assert_eq!("", config.output_folder_path.to_str().unwrap());
-        assert_eq!("bild", config.output_file_name.to_str().unwrap());
+        assert_eq!("bild", config.output_file_stem.to_str().unwrap());
+    }
+
+    #[test]
+    fn from_single_file_name_with_path() {
+        let config = Config::from(vec![String::from("exe"), String::from("bildpath\\bild.iff")]);
+
+        assert_eq!("bildpath\\bild.iff", config.input_file_path.to_str().unwrap());
+        assert_eq!("bildpath", config.output_folder_path.to_str().unwrap());
+        assert_eq!("bild", config.output_file_stem.to_str().unwrap());
+    }
+
+    #[test]
+    fn file_name_and_output_path() {
+        let config = Config::from(vec![String::from("exe"), String::from("bild.iff"), String::from("-o"), String::from("someotherpath")]);
+
+        assert_eq!("bild.iff", config.input_file_path.to_str().unwrap());
+        assert_eq!("someotherpath", config.output_folder_path.to_str().unwrap());
+        assert_eq!("bild", config.output_file_stem.to_str().unwrap());
+    }
+
+    #[test]
+    fn get_output_file_name() {
+        let config = Config::from(vec![String::from("exe"), String::from("somefolder\\bild.iff")]);
+        let res = config.get_output_file_name("ilbm");
+        assert_eq!("somefolder\\bild.ilbm", res.to_str().unwrap());
     }
 }
+
