@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 use std::io::{Error, Write};
 use std::fs::File;
-use std::fs;
 
 pub fn write_file(file_path: &PathBuf, buffer: &[u8]) -> Result<(), Error> {
     println!("file_path {:?}", file_path);
