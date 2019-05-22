@@ -1,7 +1,7 @@
 //#[allow(unused_imports)]
 //mod raw;
 
-use std::process;
+use std::{process, env};
 
 use crate::config::Config;
 use crate::iff::IffFile;
@@ -19,7 +19,8 @@ pub mod raw;
 //use crate::buffer_reader;
 
 fn main() {
-    let config = Config::get_config();
+    let args = env::args().collect::<Vec<_>>();
+    let config = Config::from(args);
 
     let buffer = match file_reader::read_file(&config.input_file_path) {
         Ok(b) => { b }

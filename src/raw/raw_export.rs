@@ -21,6 +21,7 @@ impl RawExport {
     pub fn export(self, _config: &Config) -> Result<(), ErrorKind> {
         if let cmap = Some(self.cmap) {
             println!("There is a cmap for export {:?}", cmap);
+
         }
         Ok(())
     }

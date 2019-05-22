@@ -1,15 +1,16 @@
 use std::path::PathBuf;
 
 use clap::{App, Arg};
+use std::ffi::{OsString};
 
 pub struct Config {
     pub input_file_path: PathBuf,
     pub output_folder_path: PathBuf,
-//    pub output_file_name: String,
+    pub output_file_name: Box<OsString>,
 }
 
 impl Config {
-    pub fn get_config() -> Config {
+    pub fn from(args: Vec<String>) -> Config {
         let matches = App::new("GfxConv")
             .version(env!("CARGO_PKG_VERSION"))
             .author("Krister Jansson")
@@ -23,7 +24,7 @@ impl Config {
             .arg(Arg::with_name("INPUT")
                 .help("Specifies the input file(s) to convert")
                 .required(true)
-                .multiple(true)
+//                .multiple(true)
                 .index(1))
             .arg(Arg::with_name("output-path")
                 .short("o")
@@ -42,7 +43,8 @@ impl Config {
 //            .arg(Arg::with_name("debug")
 //                .short("d")
 //                .help("print debug information verbosely")))
-            .get_matches();
+            .get_matches_from(args);
+
         let input = matches.value_of("INPUT").unwrap();
         let input_file_path = std::path::PathBuf::from(input);
         println!("input_file_path: {:?}", input_file_path);
@@ -57,6 +59,12 @@ impl Config {
             None => std::path::PathBuf::from(input_parent_path),
         };
         println!("output_folder_path: {:?}", output_folder_path);
+
+        let output_file_stem = match input_file_path.file_stem() {
+            Some(p) => p.to_owned(),
+            None => panic!("oh no"), // TODO: Result<>
+        };
+
 //
 //    // Vary the output based on how many times the user used the "verbose" flag
 //    // (i.e. 'myprog -v -v -v' or 'myprog -vvv' vs 'myprog -v'
@@ -81,7 +89,21 @@ impl Config {
         Config {
             input_file_path,
             output_folder_path,
-
+            output_file_name: Box::new(output_file_stem)
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::config::Config;
+
+    #[test]
+    fn single_file_name() {
+        let config = Config::from(vec![String::from("exe"), String::from("bild.iff")]);
+
+        assert_eq!("bild.iff", config.input_file_path.to_str().unwrap());
+        assert_eq!("", config.output_folder_path.to_str().unwrap());
+        assert_eq!("bild", config.output_file_name.to_str().unwrap());
     }
 }

@@ -11,24 +11,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="18a7fc66-3df7-475a-9ef8-7dbe01f0e53a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/common/array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/array.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/buffer_reader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/buffer_reader.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/col_rgb_u8.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/col_rgb_u8.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/config.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/error.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/error.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/iff.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/iff/chunks/bmhd_chunk.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff/chunks/bmhd_chunk.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/iff/chunks/body_chunk.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff/chunks/body_chunk.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/iff/chunks/cmap_chunk.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff/chunks/cmap_chunk.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/iff/chunks/form_ilbm_chunk.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff/chunks/form_ilbm_chunk.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/iff/raw/raw_chunk.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff/raw/raw_chunk.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/iff/raw/raw_chunk_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff/raw/raw_chunk_array.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/io.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/file_reader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/file_reader.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/file_writer.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/file_writer.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/raw/raw_export.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/raw/raw_export.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raw/raw_exporter.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/raw/raw_exporter.rs" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -45,8 +31,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/raw/raw_export.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="22" column="35" selection-start-line="22" selection-start-column="35" selection-end-line="22" selection-end-column="35" />
+            <state relative-caret-position="357">
+              <caret line="23" selection-start-line="23" selection-end-line="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="493">
+              <caret line="29" column="9" selection-start-line="26" selection-start-column="20" selection-end-line="29" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -54,17 +49,78 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/io/file_reader.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="4" selection-start-line="4" selection-end-line="18" selection-end-column="1" />
+            <state relative-caret-position="306">
+              <caret line="18" column="1" lean-forward="true" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/config.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="181">
+              <caret line="62" column="28" selection-start-line="62" selection-start-column="28" selection-end-line="62" selection-end-column="28" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libcore/clone.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="385">
+              <caret line="209" column="11" selection-start-line="209" selection-start-column="11" selection-end-line="209" selection-end-column="11" />
+              <folding>
+                <element signature="e#6945#6946#0" expanded="true" />
+                <element signature="e#6973#6974#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libstd/path.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="196">
+              <caret line="2038" column="11" selection-start-line="2038" selection-start-column="11" selection-end-line="2038" selection-end-column="11" />
+              <folding>
+                <element signature="e#37975#37976#0" expanded="true" />
+                <element signature="e#37994#37995#0" expanded="true" />
+                <element signature="e#48091#48092#0" expanded="true" />
+                <element signature="e#48146#48147#0" expanded="true" />
+                <element signature="e#69957#69958#0" expanded="true" />
+                <element signature="e#69997#69998#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.33.0/src/app/mod.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="26231">
+              <caret line="1543" column="47" selection-start-line="1543" selection-start-column="28" selection-end-line="1543" selection-end-column="47" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libstd/env.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="11781">
+              <caret line="725" column="26" selection-start-line="725" selection-start-column="20" selection-end-line="725" selection-end-column="26" />
+              <folding>
+                <element signature="e#22422#22423#0" expanded="true" />
+                <element signature="e#22464#22465#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/io/file_writer.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="69" selection-start-line="3" selection-start-column="69" selection-end-line="3" selection-end-column="69" />
+            <state relative-caret-position="102">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
             </state>
           </provider>
         </entry>
@@ -73,7 +129,7 @@
         <entry file="file://$PROJECT_DIR$/src/io.rs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="17">
-              <caret line="1" column="20" lean-forward="true" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="20" />
+              <caret line="1" column="20" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -87,6 +143,11 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>get_matches_from</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -97,12 +158,13 @@
         <option value="$PROJECT_DIR$/src/iff/chunks/cmap_chunk.rs" />
         <option value="$PROJECT_DIR$/src/iff.rs" />
         <option value="$PROJECT_DIR$/src/raw/raw_exporter.rs" />
-        <option value="$PROJECT_DIR$/src/raw/raw_export.rs" />
-        <option value="$PROJECT_DIR$/src/main.rs" />
         <option value="$PROJECT_DIR$/tests/integration_test.rs" />
         <option value="$PROJECT_DIR$/src/io/file_reader.rs" />
         <option value="$PROJECT_DIR$/src/io.rs" />
         <option value="$PROJECT_DIR$/src/io/file_writer.rs" />
+        <option value="$PROJECT_DIR$/src/raw/raw_export.rs" />
+        <option value="$PROJECT_DIR$/src/main.rs" />
+        <option value="$PROJECT_DIR$/src/config.rs" />
       </list>
     </option>
   </component>
@@ -122,6 +184,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -179,7 +242,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -199,7 +261,17 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Cargo Command.Test config::tests::it_works">
+    <configuration name="Test config::tests::it_works" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="test --package gfxconv --lib config::tests::it_works -- --exact" />
+      <option name="allFeatures" value="false" />
+      <option name="nocapture" value="false" />
+      <option name="backtrace" value="SHORT" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration name="test" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <option name="channel" value="DEFAULT" />
       <option name="command" value="test" />
@@ -210,6 +282,15 @@
       <envs />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Cargo Command.test" />
+      <item itemvalue="Cargo Command.Test config::tests::it_works" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Cargo Command.Test config::tests::it_works" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
@@ -225,23 +306,51 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1558512050969</updated>
-      <workItem from="1558512061630" duration="1265000" />
+      <workItem from="1558512061630" duration="3615000" />
+      <workItem from="1558515772619" duration="1582000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="test - 2019.05.22 at 10h 15m 10s.xml">
-      <configuration name="test" configurationId="CargoCommandRunConfiguration" />
+    <history-entry file="Test_config__tests__it_works - 2019.05.22 at 11h 00m 08s.xml">
+      <configuration name="Test config::tests::it_works" configurationId="CargoCommandRunConfiguration" />
+    </history-entry>
+    <history-entry file="Test_config__tests__it_works - 2019.05.22 at 11h 00m 35s.xml">
+      <configuration name="Test config::tests::it_works" configurationId="CargoCommandRunConfiguration" />
+    </history-entry>
+    <history-entry file="Test_config__tests__it_works - 2019.05.22 at 11h 00m 49s.xml">
+      <configuration name="Test config::tests::it_works" configurationId="CargoCommandRunConfiguration" />
+    </history-entry>
+    <history-entry file="Test_config__tests__it_works - 2019.05.22 at 11h 01m 01s.xml">
+      <configuration name="Test config::tests::it_works" configurationId="CargoCommandRunConfiguration" />
+    </history-entry>
+    <history-entry file="Test_config__tests__it_works - 2019.05.22 at 11h 01m 15s.xml">
+      <configuration name="Test config::tests::it_works" configurationId="CargoCommandRunConfiguration" />
+    </history-entry>
+    <history-entry file="Test_config__tests__it_works - 2019.05.22 at 11h 03m 02s.xml">
+      <configuration name="Test config::tests::it_works" configurationId="CargoCommandRunConfiguration" />
+    </history-entry>
+    <history-entry file="Test_config__tests__it_works - 2019.05.22 at 11h 03m 16s.xml">
+      <configuration name="Test config::tests::it_works" configurationId="CargoCommandRunConfiguration" />
+    </history-entry>
+    <history-entry file="Test_config__tests__it_works - 2019.05.22 at 11h 03m 25s.xml">
+      <configuration name="Test config::tests::it_works" configurationId="CargoCommandRunConfiguration" />
+    </history-entry>
+    <history-entry file="Test_config__tests__it_works - 2019.05.22 at 11h 05m 11s.xml">
+      <configuration name="Test config::tests::it_works" configurationId="CargoCommandRunConfiguration" />
+    </history-entry>
+    <history-entry file="Test_config__tests__it_works - 2019.05.22 at 11h 28m 47s.xml">
+      <configuration name="Test config::tests::it_works" configurationId="CargoCommandRunConfiguration" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1882000" />
+    <option name="totallyTimeSpent" value="5814000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4984375" visible="true" weight="0.17217484" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4984375" visible="true" weight="0.17377399" />
       <window_info id="Structure" order="1" sideWeight="0.5015625" side_tool="true" weight="0.16897655" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -266,28 +375,6 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/config.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
-          <caret line="48" column="64" selection-start-line="48" selection-start-column="64" selection-end-line="48" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libstd/path.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19448">
-          <caret line="1186" column="11" selection-start-line="1186" selection-start-column="11" selection-end-line="1186" selection-end-column="11" />
-          <folding>
-            <element signature="e#37975#37976#0" expanded="true" />
-            <element signature="e#37994#37995#0" expanded="true" />
-            <element signature="e#48091#48092#0" expanded="true" />
-            <element signature="e#48146#48147#0" expanded="true" />
-            <element signature="e#69957#69958#0" expanded="true" />
-            <element signature="e#69997#69998#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lib.rs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
@@ -339,36 +426,87 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-244">
-          <caret line="22" column="42" lean-forward="true" selection-start-line="22" selection-start-column="42" selection-end-line="22" selection-end-column="42" />
+        <state relative-caret-position="493">
+          <caret line="29" column="9" selection-start-line="26" selection-start-column="20" selection-end-line="29" selection-end-column="9" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/raw/raw_export.rs">
+    <entry file="file://$USER_HOME$/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.33.0/src/app/mod.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="22" column="35" selection-start-line="22" selection-start-column="35" selection-end-line="22" selection-end-column="35" />
+        <state relative-caret-position="26231">
+          <caret line="1543" column="47" selection-start-line="1543" selection-start-column="28" selection-end-line="1543" selection-end-column="47" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/io/file_reader.rs">
+    <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libstd/env.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="4" selection-start-line="4" selection-end-line="18" selection-end-column="1" />
+        <state relative-caret-position="11781">
+          <caret line="725" column="26" selection-start-line="725" selection-start-column="20" selection-end-line="725" selection-end-column="26" />
+          <folding>
+            <element signature="e#22422#22423#0" expanded="true" />
+            <element signature="e#22464#22465#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/io/file_writer.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/io.rs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
-          <caret line="1" column="20" lean-forward="true" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="20" />
+          <caret line="1" column="20" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="20" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/io/file_writer.rs">
+    <entry file="file://$PROJECT_DIR$/src/io/file_reader.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="69" selection-start-line="3" selection-start-column="69" selection-end-line="3" selection-end-column="69" />
+        <state relative-caret-position="306">
+          <caret line="18" column="1" lean-forward="true" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/raw/raw_export.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="23" selection-start-line="23" selection-end-line="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libcore/clone.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="385">
+          <caret line="209" column="11" selection-start-line="209" selection-start-column="11" selection-end-line="209" selection-end-column="11" />
+          <folding>
+            <element signature="e#6945#6946#0" expanded="true" />
+            <element signature="e#6973#6974#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libstd/path.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="2038" column="11" selection-start-line="2038" selection-start-column="11" selection-end-line="2038" selection-end-column="11" />
+          <folding>
+            <element signature="e#37975#37976#0" expanded="true" />
+            <element signature="e#37994#37995#0" expanded="true" />
+            <element signature="e#48091#48092#0" expanded="true" />
+            <element signature="e#48146#48147#0" expanded="true" />
+            <element signature="e#69957#69958#0" expanded="true" />
+            <element signature="e#69997#69998#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="62" column="28" selection-start-line="62" selection-start-column="28" selection-end-line="62" selection-end-column="28" />
         </state>
       </provider>
     </entry>
