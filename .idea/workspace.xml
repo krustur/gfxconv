@@ -13,10 +13,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79002242-f9f1-492d-8cba-84d7ddae4c40" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/iff.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/raw.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/raw.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raw/raw_exporter.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/raw/raw_exporter.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raw/raw_export.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/raw/raw_export.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raw/raw_export_writer.rs" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -55,22 +57,52 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="109" column="6" lean-forward="true" selection-start-line="109" selection-start-column="6" selection-end-line="109" selection-end-column="6" />
+            <state relative-caret-position="468">
+              <caret line="46" column="29" lean-forward="true" selection-start-line="46" selection-start-column="29" selection-end-line="46" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/config.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="298">
+              <caret line="52" selection-start-line="52" selection-end-line="52" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/raw/raw_export_writer.rs">
-          <provider selected="true" editor-type-id="text-editor" />
+        <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libstd/path.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="196">
+              <caret line="1186" column="11" selection-start-line="1186" selection-start-column="11" selection-end-line="1186" selection-end-column="11" />
+              <folding>
+                <element signature="e#37975#37976#0" expanded="true" />
+                <element signature="e#37994#37995#0" expanded="true" />
+                <element signature="e#48091#48092#0" expanded="true" />
+                <element signature="e#48146#48147#0" expanded="true" />
+                <element signature="e#69957#69958#0" expanded="true" />
+                <element signature="e#69997#69998#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lib.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="7" selection-start-line="7" selection-end-line="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/raw.rs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="34">
-              <caret line="2" column="26" selection-start-line="2" selection-start-column="26" selection-end-line="2" selection-end-column="26" />
+              <caret line="2" selection-start-line="2" selection-end-line="2" />
             </state>
           </provider>
         </entry>
@@ -87,8 +119,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/raw/raw_export.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="12" column="46" selection-start-line="12" selection-start-column="46" selection-end-line="12" selection-end-column="46" />
+            <state relative-caret-position="323">
+              <caret line="19" column="18" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
               <folding>
                 <element signature="e#218#219#0" expanded="true" />
                 <element signature="e#258#259#0" expanded="true" />
@@ -165,7 +197,6 @@
         <option value="$PROJECT_DIR$/file_formats.txt" />
         <option value="$PROJECT_DIR$/file_formats/file_formats.txt" />
         <option value="$PROJECT_DIR$/src/error.rs" />
-        <option value="$PROJECT_DIR$/src/lib.rs" />
         <option value="$PROJECT_DIR$/src/io/a.rs" />
         <option value="$PROJECT_DIR$/src/io.rs" />
         <option value="$PROJECT_DIR$/src/io/file_reader.rs" />
@@ -175,13 +206,15 @@
         <option value="$PROJECT_DIR$/src/iff/chunks/body_chunk.rs" />
         <option value="$PROJECT_DIR$/src/common.rs" />
         <option value="$PROJECT_DIR$/src/common/array.rs" />
-        <option value="$PROJECT_DIR$/src/raw/raw_export.rs" />
         <option value="$PROJECT_DIR$/src/common/col_rgb_u8.rs" />
         <option value="$PROJECT_DIR$/src/raw/raw_exporter.rs" />
-        <option value="$PROJECT_DIR$/src/main.rs" />
         <option value="$PROJECT_DIR$/src/iff.rs" />
         <option value="$PROJECT_DIR$/src/raw/raw_export_writer.rs" />
         <option value="$PROJECT_DIR$/src/raw.rs" />
+        <option value="$PROJECT_DIR$/src/raw/raw_export.rs" />
+        <option value="$PROJECT_DIR$/src/lib.rs" />
+        <option value="$PROJECT_DIR$/src/main.rs" />
+        <option value="$PROJECT_DIR$/src/config.rs" />
       </list>
     </option>
   </component>
@@ -376,14 +409,11 @@
       <workItem from="1558298602332" duration="2619000" />
       <workItem from="1558331248965" duration="8306000" />
       <workItem from="1558467050650" duration="8169000" />
-      <workItem from="1558503391410" duration="1921000" />
+      <workItem from="1558503391410" duration="4480000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Test - 2019.05.21 at 23h 22m 25s.xml">
-      <configuration name="Test" configurationId="CargoCommandRunConfiguration" />
-    </history-entry>
     <history-entry file="Test - 2019.05.21 at 23h 22m 52s.xml">
       <configuration name="Test" configurationId="CargoCommandRunConfiguration" />
     </history-entry>
@@ -411,9 +441,12 @@
     <history-entry file="Test - 2019.05.22 at 07h 55m 12s.xml">
       <configuration name="Test" configurationId="CargoCommandRunConfiguration" />
     </history-entry>
+    <history-entry file="Test - 2019.05.22 at 08h 54m 00s.xml">
+      <configuration name="Test" configurationId="CargoCommandRunConfiguration" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="46144000" />
+    <option name="totallyTimeSpent" value="48703000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -428,12 +461,12 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4984375" visible="true" weight="0.1705757" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4984375" visible="true" weight="0.1705757" />
       <window_info id="Structure" order="1" sideWeight="0.5015625" side_tool="true" weight="0.16897655" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3066089" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3066089" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -538,13 +571,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/common/buffer_reader.rs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -556,19 +582,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="19" selection-start-column="19" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libstd/path.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="2207" column="11" selection-start-line="2207" selection-start-column="11" selection-end-line="2207" selection-end-column="11" />
-          <folding>
-            <element signature="e#48091#48092#0" expanded="true" />
-            <element signature="e#48146#48147#0" expanded="true" />
-            <element signature="e#69957#69958#0" expanded="true" />
-            <element signature="e#69997#69998#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -642,17 +655,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/raw/raw_export.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="46" selection-start-line="12" selection-start-column="46" selection-end-line="12" selection-end-column="46" />
-          <folding>
-            <element signature="e#218#219#0" expanded="true" />
-            <element signature="e#258#259#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/common/col_rgb_u8.rs">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -674,20 +676,60 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="109" column="6" lean-forward="true" selection-start-line="109" selection-start-column="6" selection-end-line="109" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/raw/raw_export_writer.rs">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/raw.rs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
-          <caret line="2" column="26" selection-start-line="2" selection-start-column="26" selection-end-line="2" selection-end-column="26" />
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" selection-start-line="7" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libstd/path.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="1186" column="11" selection-start-line="1186" selection-start-column="11" selection-end-line="1186" selection-end-column="11" />
+          <folding>
+            <element signature="e#37975#37976#0" expanded="true" />
+            <element signature="e#37994#37995#0" expanded="true" />
+            <element signature="e#48091#48092#0" expanded="true" />
+            <element signature="e#48146#48147#0" expanded="true" />
+            <element signature="e#69957#69958#0" expanded="true" />
+            <element signature="e#69997#69998#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/raw/raw_export.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="18" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
+          <folding>
+            <element signature="e#218#219#0" expanded="true" />
+            <element signature="e#258#259#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="46" column="29" lean-forward="true" selection-start-line="46" selection-start-column="29" selection-end-line="46" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="52" selection-start-line="52" selection-end-line="52" />
         </state>
       </provider>
     </entry>
