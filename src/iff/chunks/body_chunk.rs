@@ -3,7 +3,7 @@ use crate::iff::chunks::bmhd_chunk::BmhdChunk;
 use crate::iff::raw::raw_chunk::RawChunk;
 
 pub struct BodyChunk {
-    pub pixels: Vec<u8>,
+//    pub pixels: Vec<u8>,
     pub interleaved_bitmap_data: Vec<u8>,
     pub raw_buffer: Vec<u8>,
 }
@@ -15,7 +15,7 @@ impl BodyChunk {
             Some(b) => b,
         };
 
-        let no_pixels = bmhd.width as usize * bmhd.height as usize;
+//        let no_pixels = bmhd.width as usize * bmhd.height as usize;
 
         let mut actual_number_of_planes = bmhd.number_of_planes as usize;
         if bmhd.masking == 1 {
@@ -28,7 +28,7 @@ impl BodyChunk {
         let mut chunk = BodyChunk {
             raw_buffer: vec![0; raw_chunk.size],
             interleaved_bitmap_data: vec![0; interleaved_size],
-            pixels: vec![0; no_pixels],
+//            pixels: vec![0; no_pixels],
         };
 
         &chunk

@@ -5,6 +5,7 @@ use clap::{App, Arg};
 use crate::io::file_reader;
 use crate::iff::IffFile;
 use std::process;
+use crate::raw::raw_exporter::RawExporter;
 
 pub mod error;
 pub mod common;
@@ -92,13 +93,16 @@ fn main() {
 
     let iff_file = IffFile::from_iff_buffer(&buffer);
 
-    match iff_file {
-        Ok(_res) => (),
+    let iff_file = match iff_file {
+        Ok(res) => (res),
         Err(err) => {
             eprintln!("Error while parsing iff buffer: {:?}", err);
             process::exit(1);
         }
-    }
+    };
+
+    let _raw_export  = iff_file.export();
+//    eprintln!("raw_export: {:?}", raw_export);
 
 //    raw::write_file();
 

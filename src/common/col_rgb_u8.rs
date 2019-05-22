@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt};
 
 #[derive(Clone)]
 pub struct ColRgbU8 {
