@@ -1,6 +1,6 @@
+use std::fs::File;
 use std::io::{Error, Read};
 use std::path::PathBuf;
-use std::fs::File;
 
 pub fn read_file(file_path: &PathBuf) -> Result<Vec<u8>, Error> {
     println!("file_path {:?}", file_path);
@@ -16,7 +16,4 @@ pub fn read_file(file_path: &PathBuf) -> Result<Vec<u8>, Error> {
     };
 
     Ok(buffer)
-//    let iff_file = IffFile::parse_iff_buffer(&buffer)?;
-
-//    Ok(iff_file)
 }
