@@ -2,7 +2,7 @@ use std::io::{Error, Read};
 use std::path::PathBuf;
 use std::fs::File;
 
-pub fn read_file(file_path: PathBuf) -> Result<Vec<u8>, Error> {
+pub fn read_file(file_path: &PathBuf) -> Result<Vec<u8>, Error> {
     println!("file_path {:?}", file_path);
 
     let mut file = match File::open(file_path) {

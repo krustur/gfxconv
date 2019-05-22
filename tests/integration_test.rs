@@ -9,7 +9,7 @@ mod test_util;
 fn read_iff_file(file: &str) -> Result<IffFile, ErrorKind> {
     let test_path = test_util::get_tests_path().join(file);
 
-    let buffer = file_reader::read_file(test_path).unwrap();
+    let buffer = file_reader::read_file(&test_path).unwrap();
 
     let iff_file = IffFile::from_iff_buffer(&buffer);
     iff_file

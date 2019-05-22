@@ -1,12 +1,10 @@
 //#[allow(unused_imports)]
 //mod raw;
 
-use clap::{App, Arg};
 use crate::io::file_reader;
 use crate::iff::IffFile;
 use std::process;
 use crate::raw::raw_exporter::RawExporter;
-use std::path::PathBuf;
 use crate::config::Config;
 
 pub mod error;
@@ -22,7 +20,7 @@ pub mod raw;
 fn main() {
     let config = Config::get_config();
 
-    let buffer = match file_reader::read_file(config.input_file_path){
+    let buffer = match file_reader::read_file(&config.input_file_path){
         Ok(b) => {b},
         Err(err) => {
             eprintln!("Error while reading input file: {:?}", err);
@@ -48,9 +46,13 @@ fn main() {
         }
     };
 
-//    match raw_export.export(){
-
-//    }
+    match raw_export.export(&config){
+        Ok(_) => {},
+        Err(err) => {
+            eprintln!("Error while exporting iff: {:?}", err);
+            process::exit(1);
+        }
+    }
 
 
 //    eprintln!("raw_export: {:?}", raw_export);

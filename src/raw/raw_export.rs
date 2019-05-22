@@ -1,5 +1,5 @@
-use std::path::PathBuf;
 use crate::error::ErrorKind;
+use crate::config::Config;
 
 pub struct RawExport {
     cmap: Option<Vec<u8>>,
@@ -17,8 +17,12 @@ impl RawExport {
         self.cmap = Some(buffer);
     }
 
-    pub fn export(path: PathBuf) -> Result<(), ErrorKind> {
+    #[allow(irrefutable_let_patterns)]
+    pub fn export(self, _config: &Config) -> Result<(), ErrorKind> {
 
+        if let cmap = Some(self.cmap){
+            println!("There is a cmap for export {:?}", cmap);
+        }
         Ok(())
     }
 }
