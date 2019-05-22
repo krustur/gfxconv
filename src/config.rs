@@ -10,7 +10,7 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn get_output_file_name(self, ext: &str) -> PathBuf {
+    pub fn get_output_file_path(&self, ext: &str) -> PathBuf {
         let file = self.output_file_stem.to_os_string();
         self.output_folder_path.join(file).with_extension(ext)
     }
@@ -131,9 +131,9 @@ mod config_tests {
     }
 
     #[test]
-    fn get_output_file_name() {
+    fn get_output_file_path() {
         let config = Config::from(vec![String::from("exe"), String::from("somefolder\\bild.iff")]);
-        let res = config.get_output_file_name("ilbm");
+        let res = config.get_output_file_path("ilbm");
         assert_eq!("somefolder\\bild.ilbm", res.to_str().unwrap());
     }
 }
