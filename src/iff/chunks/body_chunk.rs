@@ -3,7 +3,7 @@ use crate::iff::chunks::bmhd_chunk::BmhdChunk;
 use crate::iff::raw::raw_chunk::RawChunk;
 
 pub struct BodyChunk {
-//    pub pixels: Vec<u8>,
+    //    pub pixels: Vec<u8>,
     pub interleaved_bitmap_data: Vec<u8>,
     pub raw_buffer: Vec<u8>,
 }

@@ -1,7 +1,8 @@
-use clap::{App, Arg};
 use std::path::PathBuf;
 
-pub struct Config{
+use clap::{App, Arg};
+
+pub struct Config {
     pub input_file_path: PathBuf,
     pub output_folder_path: PathBuf,
 //    pub output_file_name: String,

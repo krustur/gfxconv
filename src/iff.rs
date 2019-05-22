@@ -25,8 +25,8 @@ impl IffFile {
     }
 }
 
-impl RawExporter for IffFile{
-    fn export(&self) ->  Result<RawExport, ErrorKind> {
+impl RawExporter for IffFile {
+    fn export(&self) -> Result<RawExport, ErrorKind> {
         let mut raw_export = RawExport::new();
 
 //        let cmap = match &self.ilbm.cmap{
@@ -34,20 +34,20 @@ impl RawExporter for IffFile{
 //            Some(c) => {Some(c)},
 //        };
 
-        match &self.ilbm.cmap{
-            None => {},
+        match &self.ilbm.cmap {
+            None => {}
             Some(c) => {
-                let mut cmap = vec![0; c.rgb.len()*3];
+                let mut cmap = vec![0; c.rgb.len() * 3];
                 for i in 0..c.rgb.len() {
-                    cmap[i*3+0] = c.rgb[i].r;
-                    cmap[i*3+1] = c.rgb[i].g;
-                    cmap[i*3+2] = c.rgb[i].b;
+                    cmap[i * 3 + 0] = c.rgb[i].r;
+                    cmap[i * 3 + 1] = c.rgb[i].g;
+                    cmap[i * 3 + 2] = c.rgb[i].b;
                 }
 
 //                println!("c.rgb {:?}", c.rgb);
 //                println!("cmap {:?}", cmap);
                 raw_export.add_cmap(cmap);
-            },
+            }
         }
 
         Ok(raw_export)

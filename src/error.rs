@@ -4,7 +4,7 @@ use std::str::Utf8Error;
 #[derive(Debug)]
 // #[derive(PartialEq)]
 pub enum ErrorKind {
-//    IoError(Error),
+    //    IoError(Error),
     FileTooShort,
     UnknownChunk(String),
     ChunkTooShort,
