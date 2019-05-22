@@ -20,7 +20,13 @@ pub mod raw;
 
 fn main() {
     let args = env::args().collect::<Vec<_>>();
-    let config = Config::from(args);
+    let config = match Config::from(args) {
+        Ok(b) => { b }
+        Err(err) => {
+            eprintln!("Error while reading command line args file: {:?}", err);
+            process::exit(1);
+        }
+    };
 
     let buffer = match file_reader::read_file(&config.input_file_path) {
         Ok(b) => { b }

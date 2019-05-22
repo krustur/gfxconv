@@ -1,4 +1,5 @@
 use std::path::PathBuf;
+use crate::error::ErrorKind;
 
 use clap::{App, Arg};
 use std::ffi::{OsString};
@@ -15,7 +16,7 @@ impl Config {
         self.output_folder_path.join(file).with_extension(ext)
     }
 
-    pub fn from(args: Vec<String>) -> Config {
+    pub fn from(args: Vec<String>) -> Result<Config, ErrorKind> {
         let matches = App::new("GfxConv")
             .version(env!("CARGO_PKG_VERSION"))
             .author("Krister Jansson")
@@ -54,20 +55,23 @@ impl Config {
         let input_file_path = std::path::PathBuf::from(input);
         println!("input_file_path: {:?}", input_file_path);
 
-        let input_parent_path = match input_file_path.parent() {
-            Some(p) => p,
-            None => panic!("oh no"), // TODO: Result<>
-        };
+
         let output_path = matches.value_of("output-path");
         let output_folder_path = match output_path {
             Some(o) => std::path::PathBuf::from(o),
-            None => std::path::PathBuf::from(input_parent_path),
+            None => {
+                let input_parent_path = match input_file_path.parent() {
+                    Some(p) => p,
+                    None => return Err(ErrorKind::CouldNotDetermineOutputPath)
+                };
+                std::path::PathBuf::from(input_parent_path)
+            },
         };
         println!("output_folder_path: {:?}", output_folder_path);
 
         let output_file_stem = match input_file_path.file_stem() {
             Some(p) => p.to_owned(),
-            None => panic!("oh no"), // TODO: Result<>
+            None => return Err(ErrorKind::CouldNotDetermineFileStem)
         };
 
 //
@@ -90,12 +94,13 @@ impl Config {
 //        }
 //    }
 // more program logic goes here...
-
-        Config {
+        let config = Config {
             input_file_path,
             output_folder_path,
             output_file_stem: Box::new(output_file_stem)
-        }
+        };
+
+        Ok(config)
     }
 }
 
@@ -105,7 +110,7 @@ mod config_tests {
 
     #[test]
     fn from_single_file_name() {
-        let config = Config::from(vec![String::from("exe"), String::from("bild.iff")]);
+        let config = Config::from(vec![String::from("exe"), String::from("bild.iff")]).unwrap();
 
         assert_eq!("bild.iff", config.input_file_path.to_str().unwrap());
         assert_eq!("", config.output_folder_path.to_str().unwrap());
@@ -114,7 +119,7 @@ mod config_tests {
 
     #[test]
     fn from_single_file_name_with_path() {
-        let config = Config::from(vec![String::from("exe"), String::from("bildpath\\bild.iff")]);
+        let config = Config::from(vec![String::from("exe"), String::from("bildpath\\bild.iff")]).unwrap();
 
         assert_eq!("bildpath\\bild.iff", config.input_file_path.to_str().unwrap());
         assert_eq!("bildpath", config.output_folder_path.to_str().unwrap());
@@ -123,7 +128,7 @@ mod config_tests {
 
     #[test]
     fn file_name_and_output_path() {
-        let config = Config::from(vec![String::from("exe"), String::from("bild.iff"), String::from("-o"), String::from("someotherpath")]);
+        let config = Config::from(vec![String::from("exe"), String::from("bild.iff"), String::from("-o"), String::from("someotherpath")]).unwrap();
 
         assert_eq!("bild.iff", config.input_file_path.to_str().unwrap());
         assert_eq!("someotherpath", config.output_folder_path.to_str().unwrap());
@@ -132,7 +137,7 @@ mod config_tests {
 
     #[test]
     fn get_output_file_path() {
-        let config = Config::from(vec![String::from("exe"), String::from("somefolder\\bild.iff")]);
+        let config = Config::from(vec![String::from("exe"), String::from("somefolder\\bild.iff")]).unwrap();
         let res = config.get_output_file_path("ilbm");
         assert_eq!("somefolder\\bild.ilbm", res.to_str().unwrap());
     }
