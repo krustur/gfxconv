@@ -1,4 +1,7 @@
-pub fn write_file(file_path: &PathBuf, buffer: &[u8]) -> Result<(), Error> {
+use std::path::PathBuf;
+use std::io::Error;
+
+pub fn write_file(file_path: &PathBuf, _buffer: &[u8]) -> Result<(), Error> {
     println!("file_path {:?}", file_path);
 
 //    let mut file = match File::open(file_path) {
@@ -11,5 +14,5 @@ pub fn write_file(file_path: &PathBuf, buffer: &[u8]) -> Result<(), Error> {
 //        Err(error) => return Err(error),
 //    };
 
-    Ok()
+    Ok(())
 }

@@ -11,8 +11,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="18a7fc66-3df7-475a-9ef8-7dbe01f0e53a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/common/array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/array.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/buffer_reader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/buffer_reader.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/col_rgb_u8.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/col_rgb_u8.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/error.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/error.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/iff.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/iff/chunks/bmhd_chunk.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff/chunks/bmhd_chunk.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/iff/chunks/body_chunk.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff/chunks/body_chunk.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/iff/chunks/cmap_chunk.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff/chunks/cmap_chunk.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/iff/chunks/form_ilbm_chunk.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff/chunks/form_ilbm_chunk.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/iff/raw/raw_chunk.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff/raw/raw_chunk.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/iff/raw/raw_chunk_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff/raw/raw_chunk_array.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/io.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/io.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/io/file_reader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/file_reader.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/io/file_writer.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/file_writer.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raw/raw_export.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/raw/raw_export.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raw/raw_exporter.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/raw/raw_exporter.rs" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,8 +45,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/raw/raw_export.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="23" column="35" selection-start-line="23" selection-start-column="35" selection-end-line="23" selection-end-column="35" />
+            <state relative-caret-position="340">
+              <caret line="22" column="35" selection-start-line="22" selection-start-column="35" selection-end-line="22" selection-end-column="35" />
             </state>
           </provider>
         </entry>
@@ -38,26 +54,26 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/io/file_reader.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
+            <state relative-caret-position="34">
               <caret line="4" selection-start-line="4" selection-end-line="18" selection-end-column="1" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/io/file_writer.rs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="51">
-              <caret line="3" selection-start-line="3" selection-end-line="12" />
+              <caret line="3" column="69" selection-start-line="3" selection-start-column="69" selection-end-line="3" selection-end-column="69" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/io.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="39" selection-start-column="39" selection-end-column="39" />
+            <state relative-caret-position="17">
+              <caret line="1" column="20" lean-forward="true" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -85,8 +101,8 @@
         <option value="$PROJECT_DIR$/src/main.rs" />
         <option value="$PROJECT_DIR$/tests/integration_test.rs" />
         <option value="$PROJECT_DIR$/src/io/file_reader.rs" />
-        <option value="$PROJECT_DIR$/src/io/file_writer.rs" />
         <option value="$PROJECT_DIR$/src/io.rs" />
+        <option value="$PROJECT_DIR$/src/io/file_writer.rs" />
       </list>
     </option>
   </component>
@@ -209,7 +225,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1558512050969</updated>
-      <workItem from="1558512061630" duration="1166000" />
+      <workItem from="1558512061630" duration="1265000" />
     </task>
     <servers />
   </component>
@@ -219,18 +235,18 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1783000" />
+    <option name="totallyTimeSpent" value="1882000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4984375" visible="true" weight="0.17217484" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4984375" visible="true" weight="0.17217484" />
       <window_info id="Structure" order="1" sideWeight="0.5015625" side_tool="true" weight="0.16897655" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3066089" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3066089" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -330,29 +346,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/raw/raw_export.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="23" column="35" selection-start-line="23" selection-start-column="35" selection-end-line="23" selection-end-column="35" />
+        <state relative-caret-position="340">
+          <caret line="22" column="35" selection-start-line="22" selection-start-column="35" selection-end-line="22" selection-end-column="35" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/io/file_reader.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
+        <state relative-caret-position="34">
           <caret line="4" selection-start-line="4" selection-end-line="18" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/io.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="20" lean-forward="true" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/io/file_writer.rs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
-          <caret line="3" selection-start-line="3" selection-end-line="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/io.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="39" selection-start-column="39" selection-end-column="39" />
+          <caret line="3" column="69" selection-start-line="3" selection-start-column="69" selection-end-line="3" selection-end-column="69" />
         </state>
       </provider>
     </entry>
