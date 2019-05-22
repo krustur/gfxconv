@@ -101,7 +101,13 @@ fn main() {
         }
     };
 
-    let _raw_export  = iff_file.export();
+    let raw_export = match iff_file.export(){
+        Ok(e) => {e},
+        Err(err) => {
+            eprintln!("Error while exporting iff: {:?}", err);
+            process::exit(1);
+        }
+    };
 //    eprintln!("raw_export: {:?}", raw_export);
 
 //    raw::write_file();

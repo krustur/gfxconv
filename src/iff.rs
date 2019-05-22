@@ -26,13 +26,14 @@ impl IffFile {
 }
 
 impl RawExporter for IffFile{
-    fn export(&self) ->  RawExport{
+    fn export(&self) ->  Result<RawExport, ErrorKind> {
         let mut raw_export = RawExport::new();
 
 //        let cmap = match &self.ilbm.cmap{
 //            None => {None},
 //            Some(c) => {Some(c)},
 //        };
+
         match &self.ilbm.cmap{
             None => {},
             Some(c) => {
@@ -49,6 +50,6 @@ impl RawExporter for IffFile{
             },
         }
 
-        raw_export
+        Ok(raw_export)
     }
 }
