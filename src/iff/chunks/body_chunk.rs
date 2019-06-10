@@ -12,7 +12,7 @@ pub struct BodyChunk {
 
 impl fmt::Debug for BodyChunk {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let cnt = cmp::min(1940, self.interleaved_bitmap_data.len());
+        let cnt = cmp::min(512, self.interleaved_bitmap_data.len());
 
         for i in 0..cnt {
             write!(f, "{:02X} ", self.interleaved_bitmap_data[i])?;
@@ -61,9 +61,9 @@ impl BodyChunk {
                 let new_n = -n;
                 for _i in 0..new_n + 1 {
                     chunk.interleaved_bitmap_data[target_pos] = raw_chunk.get_u8(pos)?;
-                    if target_pos < 1940 {
-                        println!("pixel: {:02X}", chunk.interleaved_bitmap_data[target_pos]);
-                    }
+                    // if target_pos < 1940 {
+                    //     println!("pixel: {:02X}", chunk.interleaved_bitmap_data[target_pos]);
+                    // }
                     target_pos += 1;
                 }
                 _written_bytes += new_n as usize + 1;
@@ -71,9 +71,9 @@ impl BodyChunk {
             } else {
                 for _i in 0..n + 1 {
                     chunk.interleaved_bitmap_data[target_pos] = raw_chunk.get_u8(pos)?;
-                    if target_pos < 1940 {                 
-                        println!("pixel: {:02X}", chunk.interleaved_bitmap_data[target_pos]);
-                    }
+                    // if target_pos < 1940 {                 
+                    //     println!("pixel: {:02X}", chunk.interleaved_bitmap_data[target_pos]);
+                    // }
                     target_pos += 1;
                     pos += 1;
                 }
