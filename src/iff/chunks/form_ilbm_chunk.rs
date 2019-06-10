@@ -114,6 +114,7 @@ impl FormIlbmChunk {
                 "BODY" => {
                     // let _chunk = UnknownChunk::new(chunk.id.to_string());
                     let chunk = BodyChunk::get_body_chunk(&chunk, &ilbm.bmhd)?;
+                    println!("Body: {:?}", chunk);
                     // println!("Cmap: {:?}", chunk);
                     ilbm.body = Some(chunk);
                     //

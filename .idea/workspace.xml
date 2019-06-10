@@ -11,8 +11,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="18a7fc66-3df7-475a-9ef8-7dbe01f0e53a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/io/file_writer.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/file_writer.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raw/raw_export.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/raw/raw_export.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file_formats/file_formats.txt" beforeDir="false" afterPath="$PROJECT_DIR$/file_formats/file_formats.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/iff.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/iff.rs" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -26,100 +26,47 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/raw/raw_export.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="30" column="38" selection-start-line="30" selection-start-column="38" selection-end-line="30" selection-end-column="38" />
+            <state relative-caret-position="340">
+              <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main.rs">
+        <entry file="file://$PROJECT_DIR$/src/iff.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="22" column="32" lean-forward="true" selection-start-line="22" selection-start-column="32" selection-end-line="22" selection-end-column="32" />
+            <state relative-caret-position="521">
+              <caret line="60" column="36" lean-forward="true" selection-start-line="60" selection-start-column="36" selection-end-line="60" selection-end-column="69" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/config.rs">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/file_formats/file_formats.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="283">
-              <caret line="133" column="29" lean-forward="true" selection-start-line="133" selection-start-column="29" selection-end-line="133" selection-end-column="29" />
+            <state relative-caret-position="391">
+              <caret line="23" column="12" selection-start-line="23" selection-start-column="12" selection-end-line="23" selection-end-column="12" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/integration_test.rs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/error.rs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="213">
-              <caret line="22" column="4" lean-forward="true" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="29" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libstd/path.rs">
+        <entry file="file://$PROJECT_DIR$/src/iff/chunks/form_ilbm_chunk.rs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="196">
-              <caret line="2038" column="11" selection-start-line="2038" selection-start-column="11" selection-end-line="2038" selection-end-column="11" />
-              <folding>
-                <element signature="e#37975#37976#0" expanded="true" />
-                <element signature="e#37994#37995#0" expanded="true" />
-                <element signature="e#48091#48092#0" expanded="true" />
-                <element signature="e#48146#48147#0" expanded="true" />
-                <element signature="e#69957#69958#0" expanded="true" />
-                <element signature="e#69997#69998#0" expanded="true" />
-              </folding>
+              <caret line="16" column="29" lean-forward="true" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/io/file_writer.rs">
+        <entry file="file://$PROJECT_DIR$/src/iff/chunks/body_chunk.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libstd/fs.rs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
-              <caret line="387" column="11" selection-start-line="387" selection-start-column="11" selection-end-line="387" selection-end-column="11" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/.rustup/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/src/libstd/io/error.rs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
-              <caret line="90" column="9" selection-start-line="90" selection-start-column="9" selection-end-line="90" selection-end-column="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/io.rs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="1" column="20" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="20" />
+            <state relative-caret-position="102">
+              <caret line="6" column="31" selection-start-line="6" selection-start-column="8" selection-end-line="6" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -146,7 +93,6 @@
       <list>
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/iff/chunks/cmap_chunk.rs" />
-        <option value="$PROJECT_DIR$/src/iff.rs" />
         <option value="$PROJECT_DIR$/src/raw/raw_exporter.rs" />
         <option value="$PROJECT_DIR$/tests/integration_test.rs" />
         <option value="$PROJECT_DIR$/src/io/file_reader.rs" />
@@ -156,6 +102,8 @@
         <option value="$PROJECT_DIR$/src/config.rs" />
         <option value="$PROJECT_DIR$/src/io/file_writer.rs" />
         <option value="$PROJECT_DIR$/src/raw/raw_export.rs" />
+        <option value="$PROJECT_DIR$/src/iff.rs" />
+        <option value="$PROJECT_DIR$/file_formats/file_formats.txt" />
       </list>
     </option>
   </component>
@@ -291,14 +239,11 @@
       <option name="presentableId" value="Default" />
       <updated>1558512050969</updated>
       <workItem from="1558512061630" duration="3615000" />
-      <workItem from="1558515772619" duration="7243000" />
+      <workItem from="1558515772619" duration="9579000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Test_config__tests__it_works - 2019.05.22 at 11h 00m 08s.xml">
-      <configuration name="Test config::tests::it_works" configurationId="CargoCommandRunConfiguration" />
-    </history-entry>
     <history-entry file="Test_config__tests__it_works - 2019.05.22 at 11h 00m 35s.xml">
       <configuration name="Test config::tests::it_works" configurationId="CargoCommandRunConfiguration" />
     </history-entry>
@@ -326,20 +271,22 @@
     <history-entry file="Test_config__tests__it_works - 2019.05.22 at 11h 28m 47s.xml">
       <configuration name="Test config::tests::it_works" configurationId="CargoCommandRunConfiguration" />
     </history-entry>
+    <history-entry file="Test_config__tests__it_works - 2019.05.22 at 22h 29m 12s.xml">
+      <configuration name="Test config::tests::it_works" configurationId="CargoCommandRunConfiguration" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="11475000" />
+    <option name="totallyTimeSpent" value="13811000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4984375" visible="true" weight="0.17377399" />
       <window_info id="Structure" order="1" sideWeight="0.5015625" side_tool="true" weight="0.16897655" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3066089" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3066089" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -384,13 +331,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
           <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/iff.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
         </state>
       </provider>
     </entry>
@@ -510,8 +450,36 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/raw/raw_export.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="30" column="38" selection-start-line="30" selection-start-column="38" selection-end-line="30" selection-end-column="38" />
+        <state relative-caret-position="340">
+          <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/iff/chunks/form_ilbm_chunk.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="16" column="29" lean-forward="true" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/iff/chunks/body_chunk.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="31" selection-start-line="6" selection-start-column="8" selection-end-line="6" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/iff.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="521">
+          <caret line="60" column="36" lean-forward="true" selection-start-line="60" selection-start-column="36" selection-end-line="60" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/file_formats/file_formats.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="23" column="12" selection-start-line="23" selection-start-column="12" selection-end-line="23" selection-end-column="12" />
         </state>
       </provider>
     </entry>

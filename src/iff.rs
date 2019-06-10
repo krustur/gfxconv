@@ -44,9 +44,21 @@ impl RawExporter for IffFile {
                     cmap[i * 3 + 2] = c.rgb[i].b;
                 }
 
-//                println!("c.rgb {:?}", c.rgb);
-//                println!("cmap {:?}", cmap);
                 raw_export.add_cmap(cmap);
+            }
+        }
+
+        match &self.ilbm.body {
+            None => {}
+            Some(c) => {
+//                let mut bmhd = vec![0; c.rgb.len() * 3];
+//                for i in 0..c.rgb.len() {
+//                    cmap[i * 3 + 0] = c.rgb[i].r;
+//                    cmap[i * 3 + 1] = c.rgb[i].g;
+//                    cmap[i * 3 + 2] = c.rgb[i].b;
+//                }
+
+                raw_export.add_ilbm(c.interleaved_bitmap_data.clone());
             }
         }
 

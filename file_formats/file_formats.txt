@@ -1,15 +1,36 @@
 Types
 =====
-ILBM=Interleaved bitmap
-CHUN=Chunky pixels
-CMAP=Color Map
-COPP=Copper
-COPC=Copper (only color)
-SPRI=Sprite
+0x01______ ILBM=Interleaved bitmap
+0x02______ CHUN=Chunky pixels
+0x80______ CMAP=Color Map
+0x________ COPP=Copper
+0x________ COPC=Copper (only color)
+0x________ SPRI=Sprite
 
-Compression
-===========
-00=No compression
+Width
+0x__0_____ 320
+0x__1_____ 640
+0x__2_____ 256
+
+Heigth
+0x___0____ 256
+0x___1____ 512
+0x___2____ 200
+0x___3____ 400
+
+Bitplanes
+0x____0___ 0
+0x____5___ 5
+0x____8___ 8
+
+Examples
+0x01000___ ILBM 320x256x8bpl
+0x01110___ ILBM 640x512x8bpl
+
+
+
+ILBM_320_256_8
+ILBM_640_256_8
 
 ILBM
 ====

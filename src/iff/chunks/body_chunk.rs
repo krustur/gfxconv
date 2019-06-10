@@ -1,3 +1,5 @@
+use std::{cmp, fmt};
+
 use crate::error::ErrorKind;
 use crate::iff::chunks::bmhd_chunk::BmhdChunk;
 use crate::iff::raw::raw_chunk::RawChunk;
@@ -6,6 +8,17 @@ pub struct BodyChunk {
     //    pub pixels: Vec<u8>,
     pub interleaved_bitmap_data: Vec<u8>,
     pub raw_buffer: Vec<u8>,
+}
+
+impl fmt::Debug for BodyChunk {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let cnt = cmp::min(1940, self.interleaved_bitmap_data.len());
+
+        for i in 0..cnt {
+            write!(f, "{:02X} ", self.interleaved_bitmap_data[i])?;
+        }
+        Ok(())
+    }
 }
 
 impl BodyChunk {
@@ -35,7 +48,7 @@ impl BodyChunk {
             .raw_buffer
             .clone_from_slice(raw_chunk.get_slice(8..raw_chunk.size + 8));
 
-        let mut pos: usize = 0;
+        let mut pos: usize = 8;
         let mut target_pos: usize = 0;
         let mut _written_bytes: usize = 0;
         while pos < raw_chunk.size {
@@ -48,6 +61,9 @@ impl BodyChunk {
                 let new_n = -n;
                 for _i in 0..new_n + 1 {
                     chunk.interleaved_bitmap_data[target_pos] = raw_chunk.get_u8(pos)?;
+                    if target_pos < 1940 {
+                        println!("pixel: {:02X}", chunk.interleaved_bitmap_data[target_pos]);
+                    }
                     target_pos += 1;
                 }
                 _written_bytes += new_n as usize + 1;
@@ -55,6 +71,9 @@ impl BodyChunk {
             } else {
                 for _i in 0..n + 1 {
                     chunk.interleaved_bitmap_data[target_pos] = raw_chunk.get_u8(pos)?;
+                    if target_pos < 1940 {                 
+                        println!("pixel: {:02X}", chunk.interleaved_bitmap_data[target_pos]);
+                    }
                     target_pos += 1;
                     pos += 1;
                 }
